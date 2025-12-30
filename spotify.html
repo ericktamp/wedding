@@ -1,278 +1,382 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spotify - For You</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --sp-black: #121212;
-            --sp-light-black: #181818;
-            --sp-green: #1DB954;
-            --sp-grey: #b3b3b3;
-            --sp-white: #ffffff;
-            --nav-bg: rgba(0,0,0,0.9);
-        }
 
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Spotify - For Kayla ❤️</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap");
 
-        body {
-            background-color: var(--sp-black);
-            color: var(--sp-white);
-            overflow-x: hidden;
-            padding-bottom: 150px; /* Space for nav & player */
-        }
-
-        /* --- HEADER --- */
-        .header {
-            padding: 40px 16px 20px;
-            background: linear-gradient(to bottom, #453080 0%, var(--sp-black) 100%);
-        }
-
-        .header-top {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .playlist-img {
-            width: 150px;
-            height: 150px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            border-radius: 4px;
-        }
-
-        .playlist-info h1 { font-size: 24px; margin-bottom: 8px; }
-        .playlist-info p { color: var(--sp-grey); font-size: 13px; }
-
-        /* --- CONTROLS --- */
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 16px 20px;
-        }
-
-        .control-left { display: flex; gap: 20px; align-items: center; color: var(--sp-grey); font-size: 20px; }
-        .play-btn {
-            width: 50px; height: 50px;
-            background-color: var(--sp-green);
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            color: black; font-size: 20px;
-        }
-
-        /* --- TRACKLIST --- */
-        .track-list { padding: 0 16px; }
-        .track-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            cursor: pointer;
-        }
-
-        .track-meta { display: flex; gap: 12px; align-items: center; }
-        .track-meta img { width: 45px; height: 45px; border-radius: 4px; }
-        .track-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-        .track-artist { font-size: 12px; color: var(--sp-grey); }
-
-        /* --- MINI PLAYER (MOBILE STYLE) --- */
-        .mini-player {
-            position: fixed;
-            bottom: 70px;
-            left: 8px;
-            right: 8px;
-            height: 56px;
-            background-color: #3d2b7a;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            padding: 0 12px;
-            z-index: 999;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-
-        .mini-info { display: flex; align-items: center; gap: 10px; flex: 1; }
-        .mini-info img { width: 38px; height: 38px; border-radius: 4px; }
-        .mini-text h4 { font-size: 12px; }
-        .mini-text p { font-size: 10px; color: #ccc; }
-
-        .mini-controls { display: flex; gap: 20px; font-size: 20px; }
-
-        .progress-line {
-            position: absolute;
-            bottom: 0;
-            left: 10px;
-            right: 10px;
-            height: 2px;
-            background: rgba(255,255,255,0.2);
-        }
-        .progress-inner { height: 100%; background: white; width: 30%; }
-
-        /* --- BOTTOM NAV --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 65px;
-            background: linear-gradient(to top, black, var(--sp-black));
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .nav-link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--sp-grey);
-            font-size: 10px;
-            text-decoration: none;
-            gap: 5px;
-        }
-
-        .nav-link.active { color: white; }
-        .nav-link i { font-size: 22px; }
-
-        /* Typography tweaks */
-        h2.section-title { padding: 20px 16px 15px; font-size: 18px; }
-
-    </style>
-</head>
-<body>
-
-    <div class="header">
-        <div class="header-top">
-            <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="playlist-img" alt="Cover">
-            <div class="playlist-info">
-                <h1>Our Love Era</h1>
-                <p><i class="fab fa-spotify" style="color:var(--sp-green)"></i> Spotify • 12,405 Likes</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="controls">
-        <div class="control-left">
-            <i class="far fa-heart"></i>
-            <i class="fas fa-arrow-alt-circle-down"></i>
-            <i class="fas fa-ellipsis-v"></i>
-        </div>
-        <div class="play-btn" onclick="togglePlay()">
-            <i class="fas fa-play" id="playIcon"></i>
-        </div>
-    </div>
-
-    <h2 class="section-title">Recommended for You</h2>
-
-    <div class="track-list">
-        <div class="track-item" onclick="playSong('Lover', 'Taylor Swift', 'https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349')">
-            <div class="track-meta">
-                <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349">
-                <div class="track-text">
-                    <div class="track-name">Lover</div>
-                    <div class="track-artist">Taylor Swift</div>
-                </div>
-            </div>
-            <i class="fas fa-ellipsis-h" style="color:var(--sp-grey)"></i>
-        </div>
-
-        <div class="track-item" onclick="playSong('Love Story (TV)', 'Taylor Swift', 'https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411')">
-            <div class="track-meta">
-                <img src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411">
-                <div class="track-text">
-                    <div class="track-name">Love Story (TV)</div>
-                    <div class="track-artist">Taylor Swift</div>
-                </div>
-            </div>
-            <i class="fas fa-ellipsis-h" style="color:var(--sp-grey)"></i>
-        </div>
-
-        <div class="track-item" onclick="playSong('Enchanted', 'Taylor Swift', 'https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932')">
-            <div class="track-meta">
-                <img src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932">
-                <div class="track-text">
-                    <div class="track-name">Enchanted</div>
-                    <div class="track-artist">Taylor Swift</div>
-                </div>
-            </div>
-            <i class="fas fa-ellipsis-h" style="color:var(--sp-grey)"></i>
-        </div>
-    </div>
-
-    <div class="mini-player">
-        <div class="mini-info">
-            <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" id="miniArt">
-            <div class="mini-text">
-                <h4 id="miniTitle">Lover</h4>
-                <p id="miniArtist">Taylor Swift</p>
-            </div>
-        </div>
-        <div class="mini-controls">
-            <i class="fas fa-desktop" style="font-size: 14px; color: var(--sp-green); align-self: center;"></i>
-            <i class="fas fa-play" id="miniPlayIcon" onclick="togglePlay()"></i>
-        </div>
-        <div class="progress-line">
-            <div class="progress-inner" id="miniProgress"></div>
-        </div>
-    </div>
-
-    <nav class="bottom-nav">
-        <a href="#" class="nav-link active">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="#" class="nav-link">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-        </a>
-        <a href="#" class="nav-link">
-            <i class="fas fa-book"></i>
-            <span>Library</span>
-        </a>
-    </nav>
-
-    <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
-
-    <script>
-        const audio = document.getElementById('audio');
-        const playIcon = document.getElementById('playIcon');
-        const miniPlayIcon = document.getElementById('miniPlayIcon');
-        const miniProgress = document.getElementById('miniProgress');
-
-        function togglePlay() {
-            if (audio.paused) {
-                audio.play();
-                playIcon.classList.replace('fa-play', 'fa-pause');
-                miniPlayIcon.classList.replace('fa-play', 'fa-pause');
-            } else {
-                audio.pause();
-                playIcon.classList.replace('fa-pause', 'fa-play');
-                miniPlayIcon.classList.replace('fa-pause', 'fa-play');
+            body {
+                font-family: "Figtree", sans-serif;
+                background-color: #000;
+                color: #fff;
+                overflow-x: hidden;
             }
-        }
 
-        function playSong(title, artist, img) {
-            document.getElementById('miniTitle').innerText = title;
-            document.getElementById('miniArtist').innerText = artist;
-            document.getElementById('miniArt').src = img;
-            audio.currentTime = 0;
-            audio.play();
-            playIcon.classList.replace('fa-play', 'fa-pause');
-            miniPlayIcon.classList.replace('fa-play', 'fa-pause');
-        }
+            .spotify-gradient {
+                background: linear-gradient(
+                    to bottom,
+                    #454545 0%,
+                    #121212 100%
+                );
+            }
 
-        audio.ontimeupdate = () => {
-            const p = (audio.currentTime / audio.duration) * 100;
-            miniProgress.style.width = p + "%";
-        }
-    </script>
-</body>
+            .song-row:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+            }
+
+            .play-btn {
+                background-color: #1ed760;
+                transition:
+                    transform 0.2s,
+                    background-color 0.2s;
+            }
+
+            .play-btn:hover {
+                transform: scale(1.05);
+                background-color: #1fdf64;
+            }
+
+            /* Custom Scrollbar */
+            ::-webkit-scrollbar {
+                width: 12px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #5a5a5a;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #888;
+            }
+        </style>
+    </head>
+    <body class="flex h-screen overflow-hidden">
+        <div class="w-64 bg-black p-6 flex flex-col gap-y-6 hidden md:flex">
+            <div class="flex items-center gap-x-4 px-2">
+                <i class="fab fa-spotify text-3xl"></i>
+                <span class="font-bold text-xl">Spotify</span>
+            </div>
+
+            <nav class="space-y-4 px-2">
+                <a
+                    href="index.html"
+                    class="flex items-center gap-x-4 text-gray-400 hover:text-white transition font-bold"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Desktop</span>
+                </a>
+                <div
+                    class="flex items-center gap-x-4 text-gray-400 hover:text-white transition font-bold cursor-pointer"
+                >
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </div>
+                <div
+                    class="flex items-center gap-x-4 text-gray-400 hover:text-white transition font-bold cursor-pointer"
+                >
+                    <i class="fas fa-search"></i>
+                    <span>Search</span>
+                </div>
+            </nav>
+
+            <div class="mt-4 bg-[#121212] rounded-lg p-4 flex-grow">
+                <div
+                    class="flex items-center gap-x-4 text-gray-400 font-bold mb-4"
+                >
+                    <i class="fas fa-book"></i>
+                    <span>Your Library</span>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-x-3">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-purple-700 to-blue-300 rounded flex items-center justify-center"
+                        >
+                            <i class="fas fa-heart text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold">Liked Songs</p>
+                            <p class="text-xs text-gray-400">
+                                Playlist • 1.234 songs
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto spotify-gradient relative">
+            <header
+                class="sticky top-0 p-4 flex justify-between items-center z-50 bg-[#121212]/0 transition-all duration-300"
+                id="header"
+            >
+                <div class="flex gap-x-2">
+                    <a
+                        href="index.html"
+                        class="w-8 h-8 bg-black/40 rounded-full flex items-center justify-center hover:bg-black/60"
+                    >
+                        <i class="fas fa-chevron-left text-white"></i>
+                    </a>
+                    <button
+                        class="w-8 h-8 bg-black/40 rounded-full flex items-center justify-center cursor-not-allowed"
+                    >
+                        <i class="fas fa-chevron-right text-white/50"></i>
+                    </button>
+                </div>
+                <div
+                    class="flex items-center gap-x-2 bg-black/40 rounded-full p-1 pr-3"
+                >
+                    <img
+                        src="https://ui-avatars.com/api/?name=Kayla&background=random"
+                        class="w-7 h-7 rounded-full"
+                        alt="Kayla"
+                    />
+                    <span class="text-xs font-bold uppercase tracking-wider"
+                        >Kayla</span
+                    >
+                </div>
+            </header>
+
+            <div
+                class="p-8 pt-4 flex flex-col md:flex-row items-end gap-x-6 bg-gradient-to-b from-transparent to-[#121212]/50"
+            >
+                <div
+                    class="w-52 h-52 md:w-60 md:h-60 shadow-2xl flex-shrink-0 bg-indigo-900 flex items-center justify-center rounded-lg"
+                >
+                    <i class="fas fa-music text-8xl text-white/20"></i>
+                </div>
+                <div class="mt-6 md:mt-0">
+                    <p class="text-xs font-bold uppercase">Public Playlist</p>
+                    <h1
+                        class="text-5xl md:text-8xl font-black my-4 tracking-tighter"
+                    >
+                        One Year With You
+                    </h1>
+                    <div class="flex items-center gap-x-2 mt-4">
+                        <img
+                            src="https://ui-avatars.com/api/?name=Boyfriend&background=050505&color=fff"
+                            class="w-6 h-6 rounded-full"
+                        />
+                        <span class="text-sm font-bold"
+                            >Your Favorite Person</span
+                        >
+                        <span class="text-gray-400 text-sm"
+                            >• 3 songs, 11 min 45 sec</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-8 flex items-center gap-x-8">
+                <button
+                    class="play-btn w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+                >
+                    <i class="fas fa-play text-black text-xl ml-1"></i>
+                </button>
+                <i
+                    class="fas fa-heart text-3xl text-[#1ed760] cursor-pointer"
+                ></i>
+                <i
+                    class="fas fa-ellipsis-h text-2xl text-gray-400 cursor-pointer hover:text-white transition"
+                ></i>
+            </div>
+
+            <div class="px-8 mb-4">
+                <div
+                    class="grid grid-cols-[16px_4fr_3fr_minmax(120px,1fr)] gap-4 text-gray-400 text-sm font-semibold border-b border-gray-800 pb-2 px-4 uppercase tracking-widest"
+                >
+                    <span>#</span>
+                    <span>Title</span>
+                    <span>Album</span>
+                    <span class="text-right"><i class="far fa-clock"></i></span>
+                </div>
+            </div>
+
+            <div class="px-8 pb-20">
+                <div
+                    class="grid grid-cols-[16px_4fr_3fr_minmax(120px,1fr)] gap-4 px-4 py-3 song-row items-center group"
+                >
+                    <span class="text-gray-400 group-hover:text-white">1</span>
+                    <div class="flex items-center gap-x-4">
+                        <img
+                            src="https://tse1.mm.bing.net/th/id/OIP.49ZqddIcGPUKRJSu6RDrrgHaHa?pid=Api&P=0&h=180"
+                            class="w-10 h-10 rounded"
+                        />
+                        <div>
+                            <p class="font-semibold text-white">Begin Again</p>
+                            <p
+                                class="text-sm text-gray-400 group-hover:text-white"
+                            >
+                                Taylor Swift
+                            </p>
+                        </div>
+                    </div>
+                    <span
+                        class="text-sm text-gray-400 group-hover:text-white italic"
+                        >Red (Taylor's Version)</span
+                    >
+                    <span
+                        class="text-sm text-gray-400 text-right group-hover:text-white"
+                        >3:58</span
+                    >
+                </div>
+
+                <div
+                    class="grid grid-cols-[16px_4fr_3fr_minmax(120px,1fr)] gap-4 px-4 py-3 song-row items-center group"
+                >
+                    <span class="text-gray-400 group-hover:text-white">2</span>
+                    <div class="flex items-center gap-x-4">
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png"
+                            class="w-10 h-10 rounded"
+                        />
+                        <div>
+                            <p class="font-semibold text-white">Lover</p>
+                            <p
+                                class="text-sm text-gray-400 group-hover:text-white"
+                            >
+                                Taylor Swift
+                            </p>
+                        </div>
+                    </div>
+                    <span
+                        class="text-sm text-gray-400 group-hover:text-white italic"
+                        >Lover</span
+                    >
+                    <span
+                        class="text-sm text-gray-400 text-right group-hover:text-white"
+                        >3:41</span
+                    >
+                </div>
+
+                <div
+                    class="grid grid-cols-[16px_4fr_3fr_minmax(120px,1fr)] gap-4 px-4 py-3 song-row items-center group"
+                >
+                    <span class="text-gray-400 group-hover:text-white">3</span>
+                    <div class="flex items-center gap-x-4">
+                        <img
+                            src="https://tse3.mm.bing.net/th/id/OIP.-eVHyPveYYE_djfxG5P0KQHaHa?pid=Api&P=0&h=180"
+                            class="w-10 h-10 rounded"
+                        />
+                        <div>
+                            <p class="font-semibold text-white">
+                                You Belong With Me
+                            </p>
+                            <p
+                                class="text-sm text-gray-400 group-hover:text-white"
+                            >
+                                Taylor Swift
+                            </p>
+                        </div>
+                    </div>
+                    <span
+                        class="text-sm text-gray-400 group-hover:text-white italic"
+                        >Fearless (Taylor's Version)</span
+                    >
+                    <span
+                        class="text-sm text-gray-400 text-right group-hover:text-white"
+                        >3:51</span
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="fixed bottom-0 w-full bg-black h-20 border-t border-gray-900 px-4 flex items-center justify-between z-[100]"
+        >
+            <div class="flex items-center gap-x-4 w-1/3">
+                <img
+                    src="https://upload.wikimedia.org/wikipedia/en/c/cd/Taylor_Swift_-_Lover.png"
+                    class="w-14 h-14 rounded shadow-lg"
+                />
+                <div>
+                    <p
+                        class="text-sm font-semibold hover:underline cursor-pointer"
+                    >
+                        Lover
+                    </p>
+                    <p
+                        class="text-[10px] text-gray-400 hover:underline cursor-pointer"
+                    >
+                        Taylor Swift
+                    </p>
+                </div>
+                <i
+                    class="far fa-heart text-gray-400 hover:text-[#1ed760] cursor-pointer ml-4"
+                ></i>
+            </div>
+
+            <div class="flex flex-col items-center w-1/3 gap-y-2">
+                <div class="flex items-center gap-x-6 text-gray-400">
+                    <i
+                        class="fas fa-random hover:text-white cursor-pointer text-xs"
+                    ></i>
+                    <i
+                        class="fas fa-step-backward hover:text-white cursor-pointer"
+                    ></i>
+                    <div
+                        class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black"
+                    >
+                        <i class="fas fa-play text-xs ml-0.5"></i>
+                    </div>
+                    <i
+                        class="fas fa-step-forward hover:text-white cursor-pointer"
+                    ></i>
+                    <i
+                        class="fas fa-redo hover:text-white cursor-pointer text-xs"
+                    ></i>
+                </div>
+                <div class="flex items-center gap-x-2 w-full max-w-md">
+                    <span class="text-[10px] text-gray-400">1:23</span>
+                    <div class="h-1 flex-grow bg-gray-600 rounded-full">
+                        <div
+                            class="h-full bg-white w-1/3 rounded-full relative group"
+                        >
+                            <div
+                                class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full hidden group-hover:block shadow-lg"
+                            ></div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-gray-400">3:41</span>
+                </div>
+            </div>
+
+            <div
+                class="flex items-center justify-end gap-x-4 w-1/3 text-gray-400"
+            >
+                <i class="fas fa-microphone text-xs"></i>
+                <i class="fas fa-list text-xs"></i>
+                <i class="fas fa-desktop text-xs"></i>
+                <div class="flex items-center gap-x-2 w-24">
+                    <i class="fas fa-volume-up text-xs"></i>
+                    <div class="h-1 flex-grow bg-gray-600 rounded-full">
+                        <div class="h-full bg-white w-2/3 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Effect on scroll for header
+            const mainContent = document.querySelector(".flex-1");
+            const header = document.getElementById("header");
+
+            mainContent.addEventListener("scroll", () => {
+                if (mainContent.scrollTop > 100) {
+                    header.style.backgroundColor = "#121212";
+                } else {
+                    header.style.backgroundColor = "transparent";
+                }
+            });
+        </script>
+    </body>
 </html>
