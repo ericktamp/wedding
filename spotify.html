@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify – Couple Era ♡</title>
+    <title>Spotify – Our Playlist</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <style>
         :root {
@@ -13,6 +13,7 @@
             --spotify-grey: #b3b3b3;
             --spotify-white: #ffffff;
         }
+
         body {
             background-color: var(--spotify-black);
             color: var(--spotify-white);
@@ -23,11 +24,15 @@
             height: 100vh;
             overflow: hidden;
         }
+
+        /* Main Container */
         .main-container {
             display: flex;
             flex: 1;
             overflow: hidden;
         }
+
+        /* Sidebar - Hidden on mobile */
         .sidebar {
             width: 240px;
             background-color: #000;
@@ -35,11 +40,12 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            overflow-y: auto;
         }
+
         @media (max-width: 768px) {
             .sidebar { display: none; }
         }
+
         .nav-item {
             display: flex;
             align-items: center;
@@ -48,43 +54,49 @@
             text-decoration: none;
             font-weight: bold;
             transition: 0.3s;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
         }
-        .nav-item:hover, .nav-item.active { color: white; background-color: #282828; }
+
+        .nav-item:hover, .nav-item.active { color: white; }
+
+        /* Main Content */
         .content {
             flex: 1;
             background: linear-gradient(to bottom, #404040, var(--spotify-black));
             overflow-y: auto;
-            padding-bottom: 100px;
+            padding-bottom: 100px; /* Space for player bar */
         }
-        .page { display: none; }
-        .page.active { display: block; }
+
         .header {
             display: flex;
             align-items: flex-end;
             padding: 40px 32px;
             gap: 24px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.5));
         }
+
         .album-art {
             width: 232px;
             height: 232px;
             box-shadow: 0 4px 60px rgba(0,0,0,0.5);
         }
+
         .header-text h1 {
             font-size: 72px;
             margin: 8px 0;
         }
+
+        /* Playlist Table */
         .playlist-container {
             padding: 20px 32px;
         }
+
         .controls {
             padding: 20px 0;
             display: flex;
             align-items: center;
             gap: 20px;
         }
+
         .play-btn-large {
             width: 56px;
             height: 56px;
@@ -97,11 +109,13 @@
             color: black;
             cursor: pointer;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             color: var(--spotify-grey);
         }
+
         th {
             text-align: left;
             border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -109,16 +123,20 @@
             text-transform: uppercase;
             font-size: 12px;
         }
-        tr:hover, tr.playing {
+
+        tr:hover {
             background-color: rgba(255,255,255,0.1);
             border-radius: 4px;
         }
-        tr.playing .song-title { color: var(--spotify-green); }
+
+        tr:hover .song-title { color: white; }
+
         td { padding: 12px 10px; cursor: pointer; }
+
         .song-info { display: flex; align-items: center; gap: 12px; }
         .song-title { color: white; font-weight: 500; display: block; }
-        .heart { cursor: pointer; transition: 0.3s; }
-        .heart.liked { color: var(--spotify-green); }
+
+        /* Player Bar */
         .player-bar {
             position: fixed;
             bottom: 0;
@@ -132,8 +150,10 @@
             padding: 0 16px;
             box-sizing: border-box;
         }
+
         .current-track { display: flex; align-items: center; gap: 14px; width: 30%; }
         .current-track img { width: 56px; height: 56px; border-radius: 4px; }
+
         .player-controls {
             display: flex;
             flex-direction: column;
@@ -141,10 +161,10 @@
             gap: 8px;
             width: 40%;
         }
+
         .control-buttons { display: flex; align-items: center; gap: 20px; font-size: 18px; }
-        .control-buttons i { cursor: pointer; }
-        .control-buttons i.active { color: var(--spotify-green); }
         .play-pause { font-size: 32px; color: white; cursor: pointer; }
+
         .progress-container {
             display: flex;
             align-items: center;
@@ -152,6 +172,7 @@
             width: 100%;
             font-size: 11px;
         }
+
         .progress-bar {
             flex: 1;
             height: 4px;
@@ -160,149 +181,181 @@
             position: relative;
             cursor: pointer;
         }
+
         .progress-fill {
             width: 0%;
             height: 100%;
             background: var(--spotify-green);
             border-radius: 2px;
         }
-        .volume-bar {
-            width: 100px;
-            height: 4px;
-            background: #4f4f4f;
-            border-radius: 2px;
-            position: relative;
+
+        /* Your Library Content */
+        .library-content {
+            padding: 40px 32px;
+            display: none; /* Hidden by default */
+        }
+
+        .library-content h2 {
+            font-size: 32px;
+            margin-bottom: 24px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .photo-item {
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px; /* Slightly rounded corners */
         }
-        .volume-fill {
-            width: 70%;
-            height: 100%;
-            background: white;
-            border-radius: 2px;
+
+        .photo-item:hover {
+            border-color: var(--spotify-green);
         }
+
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px; /* Slightly smaller rounded corners for image */
+        }
+        
+        .photo-item-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-item:hover .photo-item-caption {
+            opacity: 1;
+        }
+
+        /* Media Queries */
         @media (max-width: 600px) {
-            .header { flex-direction: column; align-items: center; text-align: center; }
+            .header { flex-direction: column; align-items: center; text-align: center; padding: 20px 16px; }
             .header-text h1 { font-size: 36px; }
             .album-art { width: 180px; height: 180px; }
+            .current-track { width: 70%; }
+            .player-controls { width: 30%; gap: 4px; }
+            .control-buttons { gap: 10px; }
             .progress-container, .duration-col { display: none; }
+            .player-bar { padding: 0 8px; }
+            .current-track img { width: 40px; height: 40px; }
+            .song-info img { display: none; } /* Hide album art in playlist table on small screens */
         }
     </style>
 </head>
 <body>
+
     <div class="main-container">
         <div class="sidebar">
-            <i class="fab fa-spotify" style="font-size: 40px; color: var(--spotify-green);"></i>
-            <div class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i> Home</div>
-            <div class="nav-item" onclick="showPage('search')"><i class="fas fa-search"></i> Search</div>
-            <div class="nav-item" onclick="showPage('library')"><i class="fas fa-book"></i> Your Library</div>
+            <i class="fab fa-spotify" style="font-size: 40px;"></i>
+            <a href="#" class="nav-item active" id="homeLink"><i class="fas fa-home"></i> Home</a>
+            <a href="#" class="nav-item" id="searchLink"><i class="fas fa-search"></i> Search</a>
+            <a href="#" class="nav-item" id="libraryLink"><i class="fas fa-book"></i> Your Library</a>
             <div style="margin-top: 20px; font-size: 12px; color: var(--spotify-grey);">PLAYLISTS</div>
-            <div class="nav-item" onclick="showPage('playlist')"><i class="fas fa-heart"></i> Couple Era ♡</div>
+            <a href="#" class="nav-item" style="font-size: 14px;">Our Love Story ♡</a>
         </div>
+
         <div class="content">
-            <div id="home" class="page active">
-                <div class="header" style="justify-content: center; text-align: center;">
-                    <h1 style="font-size: 60px;">Welcome Home, Sayang ♡</h1>
-                </div>
-                <div style="padding: 32px; text-align: center;">
-                    <p>Klik playlist Couple Era di sidebar buat dengerin lagu kita ya!</p>
-                </div>
-            </div>
-            <div id="search" class="page">
-                <div style="padding: 100px 32px; text-align: center;">
-                    <i class="fas fa-search" style="font-size: 80px; color: var(--spotify-grey);"></i>
-                    <h2>Cari lagu favoritmu...</h2>
-                    <p>(Fitur search dummy, tapi sidebarnya nyala semua woi!)</p>
-                </div>
-            </div>
-            <div id="library" class="page">
-                <div style="padding: 100px 32px; text-align: center;">
-                    <i class="fas fa-book" style="font-size: 80px; color: var(--spotify-grey);"></i>
-                    <h2>Your Library</h2>
-                    <p>Koleksi lagu kita selamanya ♡</p>
-                </div>
-            </div>
-            <div id="playlist" class="page">
+            <div id="homeContent" class="tab-content">
                 <div class="header">
-                    <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="album-art" alt="Lover">
+                    <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="album-art" alt="Lover Taylor Swift">
                     <div class="header-text">
                         <p style="font-size: 12px; font-weight: bold;">PUBLIC PLAYLIST</p>
                         <h1>Couple Era</h1>
-                        <p>Made for <b>Us</b> • 3 Songs, romantic vibes ♡</p>
+                        <p>Made for <b>Us</b> • <span id="numSongs">3</span> Songs, <span id="totalDuration">10 min 24 sec</span></p>
                     </div>
                 </div>
+
                 <div class="playlist-container">
                     <div class="controls">
                         <div class="play-btn-large" onclick="togglePlay()"><i class="fas fa-play" id="mainPlayIcon"></i></div>
-                        <i class="far fa-heart heart" id="bigHeart" style="font-size: 32px; color: var(--spotify-grey);"></i>
+                        <i class="far fa-heart" style="font-size: 32px; color: var(--spotify-grey);"></i>
                     </div>
+
                     <table>
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Title</th>
-                                <th></th>
                                 <th class="duration-col"><i class="far fa-clock"></i></th>
                             </tr>
                         </thead>
                         <tbody id="tracklist">
-                            <tr ondblclick="playSong(0)">
-                                <td>1</td>
-                                <td class="song-info">
-                                    <img src="https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349" width="40" height="40">
-                                    <div>
-                                        <span class="song-title">Lover (Instrumental Romantic)</span>
-                                        <span>Taylor Swift vibe</span>
-                                    </div>
-                                </td>
-                                <td><i class="far fa-heart heart" onclick="toggleLike(event,0)"></i></td>
-                                <td class="duration-col" id="dur-0">-</td>
-                            </tr>
-                            <tr ondblclick="playSong(1)">
-                                <td>2</td>
-                                <td class="song-info">
-                                    <img src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411" width="40" height="40">
-                                    <div>
-                                        <span class="song-title">Love Story (Romantic Piano)</span>
-                                        <span>Taylor Swift vibe</span>
-                                    </div>
-                                </td>
-                                <td><i class="far fa-heart heart" onclick="toggleLike(event,1)"></i></td>
-                                <td class="duration-col" id="dur-1">-</td>
-                            </tr>
-                            <tr ondblclick="playSong(2)">
-                                <td>3</td>
-                                <td class="song-info">
-                                    <img src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932" width="40" height="40">
-                                    <div>
-                                        <span class="song-title">Enchanted (Sweet Melody)</span>
-                                        <span>Taylor Swift vibe</span>
-                                    </div>
-                                </td>
-                                <td><i class="far fa-heart heart" onclick="toggleLike(event,2)"></i></td>
-                                <td class="duration-col" id="dur-2">-</td>
-                            </tr>
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
+
+            <div id="libraryContent" class="tab-content library-content">
+                <h2>Our Shared Memories</h2>
+                <div class="photo-grid">
+                    <div class="photo-item">
+                        <img src="https://picsum.photos/id/1018/300/300" alt="Dummy Photo 1">
+                        <div class="photo-item-caption">Beautiful Sunset</div>
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://picsum.photos/id/1015/300/300" alt="Dummy Photo 2">
+                        <div class="photo-item-caption">Mountain Adventure</div>
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://picsum.photos/id/1025/300/300" alt="Dummy Photo 3">
+                        <div class="photo-item-caption">City Lights</div>
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://picsum.photos/id/1020/300/300" alt="Dummy Photo 4">
+                        <div class="photo-item-caption">Cozy Cafe Date</div>
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://picsum.photos/id/1040/300/300" alt="Dummy Photo 5">
+                        <div class="photo-item-caption">Beach Day Fun</div>
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://picsum.photos/id/1043/300/300" alt="Dummy Photo 6">
+                        <div class="photo-item-caption">Park Stroll</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="searchContent" class="tab-content" style="padding: 40px 32px; display: none;">
+                <h2>Search</h2>
+                <p>Fitur pencarian akan datang!</p>
+            </div>
+
         </div>
     </div>
+
     <div class="player-bar">
         <div class="current-track">
-            <img id="current-art" src="https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349" alt="Art">
+            <img id="current-art" src="" alt="Art">
             <div>
-                <div class="song-title" id="current-title" style="font-size: 14px;">Lover (Instrumental)</div>
-                <div style="font-size: 11px; color: var(--spotify-grey);" id="current-artist">Romantic Vibes</div>
+                <div class="song-title" id="current-title" style="font-size: 14px;"></div>
+                <div style="font-size: 11px; color: var(--spotify-grey);" id="current-artist"></div>
             </div>
-            <i class="far fa-heart heart" id="smallHeart" style="cursor: pointer;"></i>
         </div>
+
         <div class="player-controls">
             <div class="control-buttons">
-                <i class="fas fa-random" id="shuffleBtn"></i>
+                <i class="fas fa-random" style="color: var(--spotify-grey); font-size: 14px;"></i>
                 <i class="fas fa-step-backward" onclick="prevSong()"></i>
                 <i class="fas fa-play-circle play-pause" id="playBtn" onclick="togglePlay()"></i>
                 <i class="fas fa-step-forward" onclick="nextSong()"></i>
-                <i class="fas fa-redo" id="repeatBtn"></i>
+                <i class="fas fa-redo" style="color: var(--spotify-grey); font-size: 14px;"></i>
             </div>
             <div class="progress-container">
                 <span id="currentTime">0:00</span>
@@ -312,43 +365,95 @@
                 <span id="totalTime">0:00</span>
             </div>
         </div>
+
         <div style="width: 30%; display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
             <i class="fas fa-volume-up" style="color: var(--spotify-grey);"></i>
-            <div class="volume-bar" onclick="setVolume(event)">
-                <div class="volume-fill" id="volumeFill"></div>
-            </div>
+            <div class="progress-bar" style="width: 100px;"><div class="progress-fill" style="width: 70%;"></div></div>
         </div>
     </div>
+
     <audio id="audioPlayer" src=""></audio>
+
     <script>
-        // Lagu romantic no copyright (free to use)
         const songs = [
-            { title: "Lover (Romantic Piano)", artist: "Sweet Vibes", cover: "https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349", url: "https://cdn.pixabay.com/download/audio/2022/05/28/audio_3b3b3b3b3b.mp3?filename=romantic-piano-111114.mp3" },
-            { title: "Love Story (Gentle Melody)", artist: "Love Tunes", cover: "https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411", url: "https://cdn.pixabay.com/download/audio/2023/03/22/audio_0e0e0e0e0e.mp3?filename=romantic-background-111114.mp3" },
-            { title: "Enchanted (Dreamy)", artist: "Forever Us", cover: "https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932", url: "https://cdn.pixabay.com/download/audio/2022/11/14/audio_4f4f4f4f4f.mp3?filename=a-love-story-111114.mp3" }
+            {
+                title: "Love Story (Taylor's Version)",
+                artist: "Taylor Swift",
+                cover: "https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", // Demo MP3
+                duration: "3:55"
+            },
+            {
+                title: "Lover",
+                artist: "Taylor Swift",
+                cover: "https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", // Demo MP3
+                duration: "3:41"
+            },
+            {
+                title: "Enchanted",
+                artist: "Taylor Swift",
+                cover: "https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", // Demo MP3
+                duration: "5:52"
+            }
         ];
 
         let currentSongIndex = 0;
-        let shuffle = false;
-        let repeat = 'off'; // off, all, one
-        let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
-
         const audio = document.getElementById('audioPlayer');
         const playBtn = document.getElementById('playBtn');
         const mainPlayIcon = document.getElementById('mainPlayIcon');
         const progressFill = document.getElementById('progressFill');
         const currentTimeEl = document.getElementById('currentTime');
         const totalTimeEl = document.getElementById('totalTime');
-        const volumeFill = document.getElementById('volumeFill');
-        const tracks = document.querySelectorAll('#tracklist tr');
-        const shuffleBtn = document.getElementById('shuffleBtn');
-        const repeatBtn = document.getElementById('repeatBtn');
+        const tracklistBody = document.getElementById('tracklist');
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.querySelector(`.nav-item[onclick="showPage('${pageId}')"]`).classList.add('active');
+        const homeLink = document.getElementById('homeLink');
+        const libraryLink = document.getElementById('libraryLink');
+        const searchLink = document.getElementById('searchLink');
+
+        const homeContent = document.getElementById('homeContent');
+        const libraryContent = document.getElementById('libraryContent');
+        const searchContent = document.getElementById('searchContent');
+
+
+        // Function to calculate total duration of playlist
+        function calculateTotalDuration() {
+            let totalSeconds = 0;
+            songs.forEach(song => {
+                const [minutes, seconds] = song.duration.split(':').map(Number);
+                totalSeconds += (minutes * 60) + seconds;
+            });
+
+            const totalMins = Math.floor(totalSeconds / 60);
+            const remainingSecs = totalSeconds % 60;
+            return `${totalMins} min ${remainingSecs < 10 ? '0' : ''}${remainingSecs} sec`;
+        }
+
+
+        // Populate tracklist
+        function populateTracklist() {
+            tracklistBody.innerHTML = '';
+            songs.forEach((song, index) => {
+                const row = document.createElement('tr');
+                row.setAttribute('onclick', `playSong(${index})`);
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="song-info">
+                            <img src="${song.cover}" width="40" height="40">
+                            <div>
+                                <span class="song-title">${song.title}</span>
+                                <span>${song.artist}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="duration-col">${song.duration}</td>
+                `;
+                tracklistBody.appendChild(row);
+            });
+            document.getElementById('numSongs').innerText = songs.length;
+            document.getElementById('totalDuration').innerText = calculateTotalDuration();
         }
 
         function loadSong(index) {
@@ -357,19 +462,6 @@
             document.getElementById('current-artist').innerText = song.artist;
             document.getElementById('current-art').src = song.cover;
             audio.src = song.url;
-
-            tracks.forEach((tr, i) => {
-                tr.classList.toggle('playing', i === index);
-            });
-
-            updateLikes();
-
-            audio.onloadedmetadata = () => {
-                const mins = Math.floor(audio.duration / 60);
-                const secs = Math.floor(audio.duration % 60).toString().padStart(2, '0');
-                document.getElementById(`dur-${index}`).innerText = `${mins}:${secs}`;
-                totalTimeEl.innerText = `${mins}:${secs}`;
-            };
         }
 
         function togglePlay() {
@@ -385,21 +477,44 @@
         }
 
         function playSong(index) {
-            currentSongIndex = index;
-            loadSong(index);
-            audio.play();
-            playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
-            mainPlayIcon.classList.replace('fa-play', 'fa-pause');
+            if (index !== currentSongIndex) { // Only load if different song is clicked
+                currentSongIndex = index;
+                loadSong(index);
+                audio.play();
+                playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
+                mainPlayIcon.classList.replace('fa-play', 'fa-pause');
+            } else if (audio.paused) { // If same song clicked and paused, just play
+                togglePlay();
+            }
         }
 
-        function nextSong() {
-            if (shuffle) {
-                let newIndex = currentSongIndex;
-                while (newIndex === currentSongIndex) newIndex = Math.floor(Math.random() * songs.length);
-                currentSongIndex = newIndex;
+        audio.ontimeupdate = () => {
+            if (audio.duration) {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                progressFill.style.width = `${progress}%`;
+                
+                let curMins = Math.floor(audio.currentTime / 60);
+                let curSecs = Math.floor(audio.currentTime % 60);
+                if (curSecs < 10) curSecs = "0" + curSecs;
+                currentTimeEl.innerText = `${curMins}:${curSecs}`;
+
+                let durMins = Math.floor(audio.duration / 60);
+                let durSecs = Math.floor(audio.duration % 60);
+                if (durSecs < 10) durSecs = "0" + durSecs;
+                totalTimeEl.innerText = `${durMins}:${durSecs}`;
             } else {
-                currentSongIndex = (currentSongIndex + 1) % songs.length;
+                currentTimeEl.innerText = "0:00";
+                totalTimeEl.innerText = "0:00";
             }
+        };
+
+        audio.onended = () => {
+            nextSong(); // Play next song when current one ends
+        };
+
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
             playSong(currentSongIndex);
         }
 
@@ -409,84 +524,45 @@
         }
 
         function seek(e) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            audio.currentTime = pos * audio.duration;
+            const width = e.target.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
         }
 
-        function setVolume(e) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            audio.volume = Math.max(0, Math.min(1, pos));
-            volumeFill.style.width = `${audio.volume * 100}%`;
-        }
-
-        shuffleBtn.onclick = () => {
-            shuffle = !shuffle;
-            shuffleBtn.classList.toggle('active', shuffle);
-        };
-
-        repeatBtn.onclick = () => {
-            if (repeat === 'off') { repeat = 'all'; repeatBtn.classList.add('active'); }
-            else if (repeat === 'all') { repeat = 'one'; repeatBtn.innerHTML = '<i class="fas fa-redo"></i>1'; }
-            else { repeat = 'off'; repeatBtn.classList.remove('active'); repeatBtn.innerHTML = '<i class="fas fa-redo"></i>'; }
-        };
-
-        audio.onended = () => {
-            if (repeat === 'one') playSong(currentSongIndex);
-            else if (repeat === 'all' || repeat === 'off') nextSong();
-        };
-
-        audio.ontimeupdate = () => {
-            if (audio.duration) {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = `${progress}%`;
-                const curMins = Math.floor(audio.currentTime / 60);
-                const curSecs = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
-                currentTimeEl.innerText = `${curMins}:${curSecs}`;
-            }
-        };
-
-        function toggleLike(e, index) {
-            e.stopPropagation();
-            if (likedSongs.includes(index)) {
-                likedSongs = likedSongs.filter(i => i !== index);
-            } else {
-                likedSongs.push(index);
-            }
-            localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
-            updateLikes();
-        }
-
-        function updateLikes() {
-            document.querySelectorAll('.heart').forEach(h => h.classList.remove('liked', 'fas'));
-            document.querySelectorAll('.heart').forEach(h => h.classList.add('far'));
-            likedSongs.forEach(i => {
-                document.querySelectorAll('.heart')[i+1].classList.add('liked', 'fas'); // +1 karena ada bigHeart
-                document.querySelectorAll('.heart')[i+1].classList.remove('far');
+        // Tab switching logic
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
             });
-            if (likedSongs.includes(currentSongIndex)) {
-                document.getElementById('smallHeart').classList.add('liked', 'fas');
-                document.getElementById('smallHeart').classList.remove('far');
-                document.getElementById('bigHeart').classList.add('liked', 'fas');
-                document.getElementById('bigHeart').classList.remove('far');
-            } else {
-                document.getElementById('smallHeart').classList.remove('liked', 'fas');
-                document.getElementById('smallHeart').classList.add('far');
-                document.getElementById('bigHeart').classList.remove('liked', 'fas');
-                document.getElementById('bigHeart').classList.add('far');
-            }
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            document.getElementById(tabId).style.display = 'block';
+            document.getElementById(`${tabId.replace('Content', 'Link')}`).classList.add('active');
         }
 
-        document.getElementById('smallHeart').onclick = (e) => toggleLike(e, currentSongIndex);
-        document.getElementById('bigHeart').onclick = (e) => toggleLike(e, currentSongIndex);
+        homeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTab('homeContent');
+        });
 
-        // Init
-        showPage('playlist');
-        loadSong(0);
-        audio.volume = 0.7;
-        volumeFill.style.width = '70%';
-        updateLikes();
+        libraryLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTab('libraryContent');
+        });
+        
+        searchLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTab('searchContent');
+        });
+
+
+        // Initialize
+        populateTracklist();
+        loadSong(currentSongIndex);
+        showTab('homeContent'); // Show home content by default
     </script>
 </body>
 </html>
