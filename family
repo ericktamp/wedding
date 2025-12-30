@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FDFCF8; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .bg-pattern { background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png'); }
+    </style>
+</head>
+<body class="text-[#2D4031] bg-pattern antialiased">
+
+    <header class="relative h-[80vh] flex items-center justify-center text-center px-6">
+        <div class="absolute inset-0 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&q=80" class="w-full h-full object-cover opacity-20 grayscale" alt="Family Background">
+        </div>
+        
+        <div class="relative z-10 space-y-6">
+            <span class="inline-block px-4 py-1 border border-[#2D4031] text-[10px] tracking-[0.3em] uppercase mb-4">Official Gathering 2025</span>
+            <h1 class="serif text-5xl md:text-8xl font-bold leading-tight">The Big Family <br><span class="italic text-[#B35C44]">Reunion.</span></h1>
+            <p class="max-w-xl mx-auto text-lg font-light leading-relaxed opacity-80">
+                Merajut kembali benang yang sempat terurai, merayakan setiap cerita yang menjadikan kita satu keluarga besar.
+            </p>
+            <div class="flex justify-center gap-4 pt-6">
+                <a href="#rsvp" class="bg-[#2D4031] text-white px-8 py-3 rounded-full text-sm font-semibold hover:bg-[#B35C44] transition-all duration-300">Konfirmasi Hadir</a>
+                <a href="#agenda" class="border border-[#2D4031] px-8 py-3 rounded-full text-sm font-semibold hover:bg-[#2D4031] hover:text-white transition-all">Lihat Agenda</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="agenda" class="max-w-7xl mx-auto py-24 px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                <p class="uppercase tracking-widest text-xs font-bold text-[#B35C44]">Kapan</p>
+                <div class="mt-10">
+                    <h3 class="serif text-4xl mb-2">24-25 Mei</h3>
+                    <p class="text-gray-500">Sabtu & Minggu, 2025</p>
+                </div>
+            </div>
+
+            <div class="bg-[#2D4031] p-10 rounded-3xl text-white md:col-span-2 relative overflow-hidden">
+                <p class="uppercase tracking-widest text-[10px] font-bold opacity-60 italic">Lokasi Pertemuan</p>
+                <div class="mt-10 relative z-10">
+                    <h3 class="serif text-4xl mb-4 text-[#FDFCF8]">Villa Pinus Residence, Puncak</h3>
+                    <p class="text-gray-300 font-light max-w-md">Kawasan pegunungan yang asri, sangat cocok untuk bernostalgia sambil menikmati udara segar.</p>
+                </div>
+                <div class="absolute right-[-10%] bottom-[-20%] opacity-10">
+                    <svg width="300" height="300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                </div>
+            </div>
+
+            <div class="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 md:col-span-3">
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div>
+                        <h4 class="font-bold text-[#B35C44] mb-4 underline decoration-1 underline-offset-8">Sesi Pagi</h4>
+                        <p class="text-sm leading-relaxed text-gray-600 italic">Sarapan bersama, pembukaan oleh sesepuh, dan sesi foto keluarga besar per generasi.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#B35C44] mb-4 underline decoration-1 underline-offset-8">Sesi Siang</h4>
+                        <p class="text-sm leading-relaxed text-gray-600 italic">Fun games untuk anak-anak, tukar kado, dan sharing session "Cerita Kakek-Nenek".</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#B35C44] mb-4 underline decoration-1 underline-offset-8">Sesi Malam</h4>
+                        <p class="text-sm leading-relaxed text-gray-600 italic">Barbeque, api unggun, dan pemutaran video dokumenter keluarga dari tahun ke tahun.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-end mb-12">
+                <h2 class="serif text-5xl italic font-bold">Kenangan <br>Tahun Lalu</h2>
+                <p class="text-xs tracking-widest uppercase border-b border-[#2D4031] pb-2 cursor-pointer hover:text-[#B35C44]">Lihat Semua Foto</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <img src="https://images.unsplash.com/photo-1543269664-76bc3997d9ea?auto=format&fit=crop&q=80" class="w-full h-64 object-cover rounded-2xl hover:scale-95 transition-transform duration-500" alt="Family">
+                <img src="https://images.unsplash.com/photo-1520222984843-df35ebc0f24d?auto=format&fit=crop&q=80" class="w-full h-64 object-cover rounded-2xl hover:scale-95 transition-transform duration-500" alt="Family">
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80" class="w-full h-64 object-cover rounded-2xl hover:scale-95 transition-transform duration-500" alt="Family">
+                <img src="https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?auto=format&fit=crop&q=80" class="w-full h-64 object-cover rounded-2xl hover:scale-95 transition-transform duration-500" alt="Family">
+            </div>
+        </div>
+    </section>
+
+    <section id="rsvp" class="py-24 max-w-3xl mx-auto px-6">
+        <div class="text-center space-y-4 mb-16">
+            <h2 class="serif text-5xl italic font-bold">Daftar Kehadiran</h2>
+            <p class="text-gray-500 italic">Pastikan namamu terdaftar untuk memudahkan persiapan akomodasi.</p>
+        </div>
+        
+        <form class="space-y-8 bg-white p-12 rounded-3xl shadow-xl shadow-gray-200/50">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-[10px] uppercase tracking-widest font-bold">Nama Lengkap</label>
+                    <input type="text" placeholder="Contoh: Budi Santoso" class="w-full bg-[#FDFCF8] border-none py-4 px-6 rounded-xl focus:ring-2 focus:ring-[#B35C44] transition outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] uppercase tracking-widest font-bold">Keluarga Dari (Cabang)</label>
+                    <input type="text" placeholder="Misal: Keluarga Pak RT" class="w-full bg-[#FDFCF8] border-none py-4 px-6 rounded-xl focus:ring-2 focus:ring-[#B35C44] transition outline-none">
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="text-[10px] uppercase tracking-widest font-bold">Jumlah Anggota Keluarga</label>
+                <input type="number" placeholder="Termasuk Anda" class="w-full bg-[#FDFCF8] border-none py-4 px-6 rounded-xl focus:ring-2 focus:ring-[#B35C44] transition outline-none">
+            </div>
+            <button class="w-full bg-[#B35C44] text-white py-5 rounded-xl font-bold tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-red-200">KIRIM KONFIRMASI</button>
+        </form>
+    </section>
+
+    <footer class="py-20 text-center">
+        <div class="h-[1px] w-20 bg-gray-300 mx-auto mb-10"></div>
+        <p class="serif italic text-2xl mb-4">"The strength of a family lies in its loyalty to each other."</p>
+        <p class="text-[10px] tracking-[0.5em] text-gray-400 uppercase italic">Big Family Gathering • 2025</p>
+    </footer>
+
+</body>
+</html>
