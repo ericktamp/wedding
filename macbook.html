@@ -4,252 +4,295 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Safari - Our Love Story</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        :root {
+            --safari-blur: blur(30px);
+            --safari-border: 1px solid rgba(255, 255, 255, 0.2);
+            --bg-overlay: rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; }
 
         body {
-            /* Background khas macOS Big Sur/Monterey */
-            background: url('https://images.unsplash.com/photo-1611003228941-98a52e66f2ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-            background-size: cover;
             height: 100vh;
+            background: url('https://raw.githubusercontent.com/sonnylazuardi/macOS-Big-Sur-Wallpapers/main/Big%20Sur%20Graphic.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- BROWSER WINDOW --- */
+        .safari-window {
+            width: 90%;
+            height: 85vh;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: var(--safari-blur);
+            -webkit-backdrop-filter: var(--safari-blur);
+            border-radius: 12px;
+            border: var(--safari-border);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* --- SAFARI TOP BAR --- */
-        .safari-toolbar {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 10px 20px;
+        /* --- HEADER / TOOLBAR --- */
+        .toolbar {
+            height: 52px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            padding: 0 16px;
+            gap: 20px;
             border-bottom: 1px solid rgba(0,0,0,0.1);
-            z-index: 100;
         }
 
-        .window-controls { display: flex; gap: 8px; width: 200px; }
+        .controls { display: flex; gap: 8px; align-items: center; }
         .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .red { background: #FF5F57; }
-        .yellow { background: #FFBD2E; }
-        .green { background: #28C840; }
+        .red { background: #FF5F57; border: 0.5px solid #E0443E; }
+        .yellow { background: #FFBD2E; border: 0.5px solid #DEA123; }
+        .green { background: #28C840; border: 0.5px solid #1AAB29; }
+
+        .nav-btns { display: flex; gap: 15px; color: #555; font-size: 16px; }
+        .nav-btns i { cursor: pointer; opacity: 0.5; }
+
+        .address-bar-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
 
         .address-bar {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 6px 15px;
-            border-radius: 8px;
-            width: 500px;
+            width: 100%;
+            max-width: 600px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: #333;
+            padding: 0 12px;
             font-size: 13px;
-            gap: 10px;
+            color: #333;
+            gap: 8px;
+            border: 0.5px solid rgba(0,0,0,0.1);
         }
 
-        .address-bar i { color: #666; font-size: 12px; }
+        .address-bar span { flex: 1; text-align: center; margin-right: 20px; }
 
-        .top-right-icons { display: flex; gap: 20px; color: #555; width: 200px; justify-content: flex-end; }
+        .actions { display: flex; gap: 18px; color: #555; }
+        .actions i { cursor: pointer; font-size: 14px; }
 
-        /* --- MAIN CONTENT AREA --- */
-        .safari-content {
+        /* --- MAIN LAYOUT (SIDEBAR + CONTENT) --- */
+        .main-view {
+            display: flex;
             flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(0,0,0,0.1);
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sidebar-item:hover { background: rgba(0,0,0,0.05); }
+        .sidebar-item i { color: #007AFF; width: 16px; }
+
+        /* --- START PAGE --- */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: url('https://images.unsplash.com/photo-1494548162494-384bba4ab999?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            padding: 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 80px;
-            text-align: center;
-            color: white;
-            overflow-y: auto;
         }
 
-        .start-page-title {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 40px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        /* --- FAVORITES GRID --- */
-        .section-label {
+        .content-overlay {
             width: 100%;
             max-width: 800px;
-            text-align: left;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding-left: 20px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(0,0,0,0.6);
+            margin-bottom: 12px;
+            margin-top: 30px;
+            text-transform: uppercase;
         }
 
         .favorites-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 30px;
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 50px;
-            padding: 0 20px;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 20px;
         }
 
-        .fav-item {
+        .fav-card {
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-decoration: none;
-            color: white;
-            transition: transform 0.2s;
+            gap: 8px;
             cursor: pointer;
+            text-decoration: none;
         }
-
-        .fav-item:hover { transform: translateY(-5px); }
 
         .fav-icon {
             width: 60px;
             height: 60px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            margin-bottom: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
 
-        .fav-name { font-size: 12px; font-weight: 400; }
+        .fav-card:hover .fav-icon { transform: scale(1.05); }
+        .fav-card span { font-size: 11px; color: #333; font-weight: 500; }
 
-        /* --- PRIVACY REPORT CARD --- */
-        .privacy-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(25px);
-            border-radius: 15px;
-            width: 90%;
-            max-width: 760px;
+        .privacy-box {
+            background: rgba(255,255,255,0.7);
             padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            text-align: left;
-            border: 1px solid rgba(255,255,255,0.1);
+            gap: 15px;
+            border: 0.5px solid rgba(0,0,0,0.1);
         }
 
-        .privacy-icon { font-size: 40px; color: #fff; }
-        .privacy-text h3 { font-size: 16px; margin-bottom: 4px; }
-        .privacy-text p { font-size: 13px; opacity: 0.8; }
+        .privacy-box i { font-size: 30px; color: #333; }
+        .privacy-box div h4 { font-size: 14px; margin-bottom: 2px; }
+        .privacy-box div p { font-size: 12px; color: #666; }
 
-        /* --- BOTTOM NAV --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
-            padding: 10px 20px;
-            border-radius: 40px;
-            display: flex;
-            gap: 25px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .bottom-nav i { color: white; font-size: 20px; cursor: pointer; opacity: 0.8; }
-        .bottom-nav i:hover { opacity: 1; transform: scale(1.1); }
-
-        /* Mobile Adjustments */
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
-            .address-bar { width: 60%; }
-            .window-controls, .top-right-icons { width: auto; }
-            .start-page-title { font-size: 24px; }
-            .favorites-grid { grid-template-columns: repeat(4, 1fr); }
+            .sidebar { display: none; }
+            .address-bar { width: 100%; }
+            .nav-btns { display: none; }
+            .safari-window { width: 98%; height: 95vh; }
         }
     </style>
 </head>
 <body>
 
-    <div class="safari-toolbar">
-        <div class="window-controls">
-            <div class="dot red"></div>
-            <div class="dot yellow"></div>
-            <div class="dot green"></div>
-        </div>
-        <div class="address-bar">
-            <i class="fas fa-lock"></i>
-            <span>our-love-journey.com</span>
-            <i class="fas fa-redo"></i>
-        </div>
-        <div class="top-right-icons">
-            <i class="fas fa-share"></i>
-            <i class="fas fa-plus"></i>
-            <i class="fas fa-layer-group"></i>
-        </div>
-    </div>
+    <div class="safari-window">
+        <div class="toolbar">
+            <div class="controls">
+                <div class="dot red" onclick="alert('Cant close our love!')"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+                <i class="fas fa-columns" style="margin-left: 15px; color: #555; cursor: pointer;"></i>
+            </div>
+            
+            <div class="nav-btns">
+                <i class="fas fa-chevron-left"></i>
+                <i class="fas fa-chevron-right"></i>
+            </div>
 
-    <div class="safari-content">
-        <h1 class="start-page-title">Favorites</h1>
+            <div class="address-bar-container">
+                <div class="address-bar">
+                    <i class="fas fa-shield-halved"></i>
+                    <span>our-anniversary.love</span>
+                    <i class="fas fa-arrows-rotate"></i>
+                </div>
+            </div>
 
-        <div class="favorites-grid">
-            <div class="fav-item" onclick="showMsg('Memories')">
-                <div class="fav-icon" style="background: #FF9500;"><i class="fas fa-heart"></i></div>
-                <span class="fav-name">Memories</span>
-            </div>
-            <div class="fav-item" onclick="showMsg('Gallery')">
-                <div class="fav-icon" style="background: #34C759;"><i class="fas fa-images"></i></div>
-                <span class="fav-name">Gallery</span>
-            </div>
-            <div class="fav-item" onclick="showMsg('Taylor Swift')">
-                <div class="fav-icon" style="background: #5856D6;"><i class="fab fa-itunes-note"></i></div>
-                <span class="fav-name">Taylor Swift</span>
-            </div>
-            <div class="fav-item" onclick="showMsg('Dates')">
-                <div class="fav-icon" style="background: #FF2D55;"><i class="fas fa-calendar-alt"></i></div>
-                <span class="fav-name">Dates</span>
-            </div>
-            <div class="fav-item" onclick="window.location.reload()">
-                <div class="fav-icon"><i class="fas fa-plus" style="color: #aaa;"></i></div>
-                <span class="fav-name">Add</span>
+            <div class="actions">
+                <i class="fas fa-share-nodes"></i>
+                <i class="fas fa-plus"></i>
+                <i class="fas fa-clone"></i>
             </div>
         </div>
 
-        <div class="section-label">Privacy Report</div>
-        <div class="privacy-card">
-            <div class="privacy-icon">
-                <i class="fas fa-shield-alt"></i>
+        <div class="main-view">
+            <div class="sidebar">
+                <div class="sidebar-item"><i class="fas fa-star"></i> Favorites</div>
+                <div class="sidebar-item"><i class="fas fa-clock-rotate-left"></i> History</div>
+                <div class="sidebar-item"><i class="fas fa-glasses"></i> Reading List</div>
+                <div class="sidebar-item"><i class="fas fa-user-group"></i> Shared with You</div>
+                <div class="sidebar-item" style="margin-top: auto;"><i class="fas fa-gear"></i> Safari Settings</div>
             </div>
-            <div class="privacy-text">
-                <h3>99+ Trackers Prevented</h3>
-                <p>Safari has prevented 99+ bad vibes and arguments from profiling you in the last 30 days. Your love is secure.</p>
+
+            <div class="content">
+                <div class="content-overlay">
+                    <div class="section-title">Favorites</div>
+                    <div class="favorites-grid">
+                        <a href="#" class="fav-card">
+                            <div class="fav-icon" style="color: #1DB954;"><i class="fab fa-spotify"></i></div>
+                            <span>Our Playlist</span>
+                        </a>
+                        <a href="#" class="fav-card">
+                            <div class="fav-icon" style="color: #FF2D55;"><i class="fas fa-heart"></i></div>
+                            <span>First Date</span>
+                        </a>
+                        <a href="#" class="fav-card">
+                            <div class="fav-icon" style="color: #5856D6;"><i class="fab fa-instagram"></i></div>
+                            <span>Moments</span>
+                        </a>
+                        <a href="#" class="fav-card">
+                            <div class="fav-icon" style="color: #FF9500;"><i class="fas fa-music"></i></div>
+                            <span>Swiftie Era</span>
+                        </a>
+                        <a href="#" class="fav-card">
+                            <div class="fav-icon" style="background: #f0f0f0;"><i class="fas fa-plus" style="color:#aaa"></i></div>
+                            <span>Add</span>
+                        </a>
+                    </div>
+
+                    <div class="section-title">Privacy Report</div>
+                    <div class="privacy-box">
+                        <i class="fas fa-fingerprint"></i>
+                        <div>
+                            <h4>Your Love is Private</h4>
+                            <p>Safari prevented 1,248 attempts to ruin your mood this week. 100% of our dates are encrypted.</p>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Shared with You</div>
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
+                        <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" style="width: 120px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                        <div style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                            <h4 style="margin-bottom: 5px;">Taylor Swift - Lover</h4>
+                            <p style="font-size: 12px; opacity: 0.8;">Sent by your Favorite Person</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="section-label" style="margin-top: 40px;">Siri Suggestions</div>
-        <p style="font-size: 14px; opacity: 0.7;">"Siri suggest you to say 'I Love You' right now."</p>
-    </div>
-
-    <div class="bottom-nav">
-        <i class="fas fa-chevron-left" onclick="alert('No going back in our relationship!')"></i>
-        <i class="fas fa-chevron-right"></i>
-        <i class="fas fa-share-square"></i>
-        <i class="fas fa-book-open"></i>
-        <i class="fas fa-clone"></i>
     </div>
 
     <script>
-        function showMsg(type) {
-            alert("Opening " + type + " era... \nEverything in this folder is about us!");
-        }
-
-        // Simulating address bar interaction
-        document.querySelector('.address-bar').addEventListener('click', function() {
-            let url = prompt("Enter URL:", "https://www.our-future.com");
-            if(url) {
-                alert("Redirecting to your happy future...");
-            }
-        });
+        // Animasi loading sederhana di address bar
+        document.querySelector('.fa-arrows-rotate').onclick = function() {
+            this.style.transform = 'rotate(360deg)';
+            this.style.transition = 'transform 0.5s';
+            setTimeout(() => this.style.transform = 'rotate(0deg)', 500);
+        };
     </script>
-
 </body>
 </html>
