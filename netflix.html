@@ -3,283 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix Indonesia - Watch Love Stories</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <title>CoupleFlix - Netflix untuk Pasangan</title>
     <style>
-        :root {
-            --nf-red: #E50914;
-            --nf-black: #141414;
-            --nf-white: #E5E5E5;
-            --nf-dark-grey: #181818;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            background-color: var(--nf-black);
-            color: white;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* --- PROFILE SELECTOR (WHO'S WATCHING) --- */
-        #profile-screen {
-            position: fixed;
-            inset: 0;
             background-color: #141414;
-            z-index: 10000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #000;
+            padding: 20px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            transition: opacity 0.6s ease;
-        }
-
-        #profile-screen h1 {
-            font-size: 3.5vw;
-            font-weight: 500;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .profile-list {
-            display: flex;
-            gap: 2vw;
-            list-style: none;
-        }
-
-        .profile-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            text-decoration: none;
-            color: grey;
-        }
-
-        .profile-card:hover .avatar { border: 3px solid white; }
-        .profile-card:hover { color: white; }
-
-        .avatar {
-            width: 10vw;
-            height: 10vw;
-            min-width: 100px;
-            min-height: 100px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            background-size: cover;
-            border: 3px solid transparent;
-            transition: 0.2s;
-        }
-
-        .manage-profile-btn {
-            margin-top: 4vw;
-            padding: 10px 25px;
-            border: 1px solid grey;
-            color: grey;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-        }
-
-        /* --- NETFLIX NAVBAR --- */
-        .navbar {
             position: fixed;
-            top: 0; width: 100%; height: 68px;
-            display: flex; align-items: center; padding: 0 4%;
-            background: linear-gradient(to bottom, rgba(0,0,0,.7) 10%, transparent);
-            z-index: 1000;
-            transition: background 0.4s;
-        }
-
-        .navbar.black { background-color: #141414; }
-
-        .nav-logo {
-            color: var(--nf-red);
-            font-size: 30px;
-            font-family: 'Arial Black', sans-serif;
-            margin-right: 25px;
-            font-weight: 900;
-        }
-
-        .nav-links { display: flex; gap: 20px; font-size: 14px; list-style: none; }
-        .nav-links li { cursor: pointer; color: #e5e5e5; transition: 0.3s; }
-        .nav-links li:hover { color: #b3b3b3; }
-
-        /* --- BILLBOARD (HERO) --- */
-        .billboard {
-            position: relative;
-            height: 85vh;
             width: 100%;
-            background: linear-gradient(to top, var(--nf-black) 5%, transparent 20%),
-                        linear-gradient(to right, rgba(0,0,0,0.6) 30%, transparent 70%),
-                        url('https://i.ibb.co/Xz9ZkR8/hero-bg.jpg'); /* GANTI FOTO COUPLE DI SINI */
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            color: #e50914;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1em;
+        }
+        .hero {
+            background-image: url('https://via.placeholder.com/1920x600?text=Couple+Date+Night+Banner'); /* Ganti dengan gambar romantis, misal couple watching movie */
             background-size: cover;
-            background-position: center;
+            height: 600px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-left: 4%;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 50px;
+            margin-top: 60px; /* Biar nggak ketutup header */
         }
-
-        .billboard-title { font-size: 4vw; width: 40%; margin-bottom: 20px; }
-        .billboard-meta { font-size: 1.2vw; font-weight: bold; margin-bottom: 15px; }
-        .billboard-meta span { color: #46d369; } /* Match Rating */
-
-        .btn-group { display: flex; gap: 1rem; }
-        .nf-btn {
-            display: flex; align-items: center; gap: 10px;
-            padding: 12px 28px; border-radius: 4px; border: none;
-            font-size: 1.2vw; font-weight: bold; cursor: pointer;
-            transition: 0.2s;
+        .hero-content {
+            max-width: 50%;
         }
-        .btn-play { background-color: white; color: black; }
-        .btn-play:hover { background-color: rgba(255,255,255,0.7); }
-        .btn-info { background-color: rgba(109, 109, 110, 0.7); color: white; }
-        .btn-info:hover { background-color: rgba(109, 109, 110, 0.4); }
-
-        /* --- ROW SLIDER --- */
-        .row { margin: 3vw 0 3vw 4%; }
-        .row-header { font-size: 1.4vw; font-weight: bold; margin-bottom: 10px; color: #e5e5e5; }
-        .row-container {
-            display: flex;
-            overflow-x: scroll;
-            overflow-y: hidden;
-            padding: 20px 0;
-            gap: 10px;
+        .hero h1 {
+            font-size: 4em;
+            margin: 0;
         }
-        .row-container::-webkit-scrollbar { display: none; }
-
-        .item {
-            position: relative;
-            min-width: 250px;
-            height: 140px;
-            background-color: var(--nf-dark-grey);
-            border-radius: 4px;
+        .hero p {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .hero button {
+            background-color: #e50914;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2em;
             cursor: pointer;
-            transition: transform 0.3s ease;
         }
-
-        .item img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
-        
-        /* Pop-out Effect */
-        .item:hover {
-            transform: scale(1.4);
-            z-index: 10;
+        .section {
+            padding: 20px 50px;
         }
-
-        /* --- FOOTER --- */
-        footer { padding: 50px 0; text-align: center; color: grey; font-size: 14px; }
-
-        @media (max-width: 768px) {
-            .nav-links, .manage-profile-btn { display: none; }
-            .billboard-title { font-size: 30px; width: 80%; }
-            .nf-btn { font-size: 14px; padding: 8px 15px; }
-            .item { min-width: 160px; height: 90px; }
-            #profile-screen h1 { font-size: 24px; }
+        .row-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
         }
+        .row {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding-bottom: 20px;
+        }
+        .card {
+            min-width: 150px;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.1);
+        }
+        .card img {
+            width: 100%;
+            height: 225px;
+            object-fit: cover;
+        }
+        .card p {
+            padding: 5px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .footer {
+            background-color: #000;
+            padding: 40px 50px;
+            text-align: left;
+        }
+        .faq {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            background-color: #303030;
+            margin-bottom: 10px;
+            padding: 20px;
+            cursor: pointer;
+        }
+        .faq-item h3 {
+            margin: 0;
+        }
+        /* Tambah JS kalo mau accordion effect */
     </style>
 </head>
 <body>
-
-    <div id="profile-screen">
-        <h1>Who's watching?</h1>
-        <div class="profile-list">
-            <div class="profile-card" onclick="enterApp('Cowok')">
-                <div class="avatar" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png');"></div>
-                <span>Sayangku</span>
+    <div class="header">
+        <div class="logo">CoupleFlix</div>
+        <div class="nav">
+            <a href="#">Home</a>
+            <a href="#">Romantis</a>
+            <a href="#">Komedi</a>
+            <a href="#">Drama</a>
+            <a href="#">Profil Kami</a>
+        </div>
+    </div>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Nonton Bareng, Cinta Selamanya</h1>
+            <p>Film-film terbaik buat date night lo dan pasangan. Unlimited romance!</p>
+            <button>Mulai Nonton</button>
+        </div>
+    </div>
+    <div class="section">
+        <div class="row-title">Rekomendasi Romantis Teratas</div>
+        <div class="row">
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=The+Notebook" alt="The Notebook">
+                <p>The Notebook</p>
             </div>
-            <div class="profile-card" onclick="enterApp('Cewek')">
-                <div class="avatar" style="background-image: url('https://i.pinimg.com/originals/fb/8e/8a/fb8e8a96fca2f049334f312086a6e2f6.png');"></div>
-                <span>Cintaku</span>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=Titanic" alt="Titanic">
+                <p>Titanic</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=La+La+Land" alt="La La Land">
+                <p>La La Land</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=To+All+The+Boys" alt="To All The Boys">
+                <p>To All The Boys</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=The+Fault+In+Our+Stars" alt="The Fault In Our Stars">
+                <p>The Fault In Our Stars</p>
             </div>
         </div>
-        <div class="manage-profile-btn">Manage Profiles</div>
     </div>
-
-    <nav class="navbar" id="nav">
-        <div class="nav-logo">NETFLIX</div>
-        <ul class="nav-links">
-            <li style="font-weight:bold; color:white;">Home</li>
-            <li>TV Shows</li>
-            <li>Movies</li>
-            <li>New & Popular</li>
-            <li>My List</li>
-        </ul>
-    </nav>
-
-    <header class="billboard">
-        <div class="billboard-meta"><span>98% Match</span> 2024 13+ 1 Season</div>
-        <h1 class="billboard-title">Kisah Kita: The Love Eras</h1>
-        <div class="btn-group">
-            <button class="nf-btn btn-play" onclick="togglePlay()"><i class="fas fa-play"></i> Play</button>
-            <button class="nf-btn btn-info"><i class="fas fa-circle-info"></i> More Info</button>
-        </div>
-    </header>
-
-    <div class="row">
-        <h2 class="row-header">Trending Now</h2>
-        <div class="row-container">
-            <div class="item"><img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349"></div>
-            <div class="item"><img src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411"></div>
-            <div class="item"><img src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932"></div>
-            <div class="item"><img src="https://picsum.photos/id/1015/300/200"></div>
-            <div class="item"><img src="https://picsum.photos/id/1016/300/200"></div>
-            <div class="item"><img src="https://picsum.photos/id/1019/300/200"></div>
+    <div class="section">
+        <div class="row-title">Komedi Buat Ketawa Bareng</div>
+        <div class="row">
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=When+Harry+Met+Sally" alt="When Harry Met Sally">
+                <p>When Harry Met Sally</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=Crazy+Stupid+Love" alt="Crazy Stupid Love">
+                <p>Crazy Stupid Love</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=The+Proposal" alt="The Proposal">
+                <p>The Proposal</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=How+To+Lose+A+Guy" alt="How To Lose A Guy">
+                <p>How To Lose A Guy</p>
+            </div>
         </div>
     </div>
-
-    <div class="row">
-        <h2 class="row-header">Continue Watching for You</h2>
-        <div class="row-container">
-            <div class="item"><img src="https://picsum.photos/id/1035/300/200"></div>
-            <div class="item"><img src="https://picsum.photos/id/1039/300/200"></div>
-            <div class="item"><img src="https://picsum.photos/id/1043/300/200"></div>
-            <div class="item"><img src="https://picsum.photos/id/1050/300/200"></div>
+    <div class="section">
+        <div class="row-title">Drama yang Bikin Mewek Bareng</div>
+        <div class="row">
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=A+Walk+To+Remember" alt="A Walk To Remember">
+                <p>A Walk To Remember</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=Me+Before+You" alt="Me Before You">
+                <p>Me Before You</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/150x225?text=P.S.+I+Love+You" alt="P.S. I Love You">
+                <p>P.S. I Love You</p>
+            </div>
         </div>
     </div>
-
-    <footer>
-        &copy; 1997-2024 Netflix, Inc. - Khusus Buat Kamu ❤️
-    </footer>
-
-    <audio id="tadum" src="https://www.myinstants.com/media/sounds/netflix-intro-sound.mp3"></audio>
-    <audio id="song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
-
-    <script>
-        const nav = document.getElementById('nav');
-        const song = document.getElementById('song');
-        const tadum = document.getElementById('tadum');
-
-        // Nav Scroll Effect
-        window.onscroll = () => {
-            if (window.scrollY > 50) nav.classList.add('black');
-            else nav.classList.remove('black');
-        };
-
-        // Profile Selector Logic
-        function enterApp(user) {
-            tadum.play();
-            const screen = document.getElementById('profile-screen');
-            screen.style.opacity = '0';
-            setTimeout(() => {
-                screen.style.display = 'none';
-                alert("Selamat datang, " + user + "!");
-            }, 600);
-        }
-
-        // Music Toggle
-        let playing = false;
-        function togglePlay() {
-            if(!playing) {
-                song.play();
-                document.querySelector('.btn-play').innerHTML = '<i class="fas fa-pause"></i> Pause';
-            } else {
-                song.pause();
-                document.querySelector('.btn-play').innerHTML = '<i class="fas fa-play"></i> Play';
-            }
-            playing = !playing;
-        }
-    </script>
+    <div class="footer">
+        <div class="faq">
+            <h2>Pertanyaan Sering Diajukan</h2>
+            <div class="faq-item">
+                <h3>Apa itu CoupleFlix?</h3>
+                <!-- Tambah deskripsi di JS -->
+            </div>
+            <div class="faq-item">
+                <h3>Berapa harganya?</h3>
+            </div>
+            <div class="faq-item">
+                <h3>Bisa nonton di mana aja?</h3>
+            </div>
+            <div class="faq-item">
+                <h3>Gimana cara batalin?</h3>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 20px;">&copy; 2025 CoupleFlix. Hak cipta dilindungi.</p>
+    </div>
 </body>
 </html>
