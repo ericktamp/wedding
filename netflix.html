@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix - Our Love Story</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-black: #141414;
+            --netflix-grey: #808080;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--netflix-black);
+            color: white;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- INTRO ANIMATION --- */
+        #intro {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 1s ease 3.5s forwards;
+        }
+
+        .netflix-logo-n {
+            color: var(--netflix-red);
+            font-size: 120px;
+            font-weight: bold;
+            font-family: 'Arial Black';
+            transform: scale(0.5);
+            animation: zoomIn 2.5s ease-in-out forwards;
+        }
+
+        @keyframes zoomIn {
+            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
+            50% { opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1.2); }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            position: fixed;
+            top: 0; width: 100%; padding: 20px 50px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 10%, transparent);
+            z-index: 1000;
+            transition: background 0.5s;
+        }
+
+        .navbar.scrolled { background-color: var(--netflix-black); }
+
+        .logo {
+            color: var(--netflix-red);
+            font-size: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .nav-links { display: flex; gap: 20px; list-style: none; font-size: 14px; }
+        .nav-links li { cursor: pointer; transition: 0.3s; }
+        .nav-links li:hover { color: var(--netflix-grey); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 90vh;
+            background: linear-gradient(to right, rgba(0,0,0,0.8), transparent), 
+                        url('https://wallpaperaccess.com/full/1923020.jpg'); /* Ganti Foto Utama Disini */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 50px;
+        }
+
+        .hero-title { font-size: 60px; margin-bottom: 20px; }
+        .hero-desc { max-width: 600px; font-size: 18px; margin-bottom: 30px; line-height: 1.4; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+
+        .btn-group { display: flex; gap: 15px; }
+        .btn {
+            padding: 12px 25px; border-radius: 4px; border: none;
+            font-size: 18px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .btn-play { background-color: white; color: black; }
+        .btn-play:hover { background-color: rgba(255,255,255,0.7); }
+        .btn-info { background-color: rgba(109, 109, 110, 0.7); color: white; }
+
+        /* --- SLIDER ROWS --- */
+        .row { padding: 20px 50px; }
+        .row-title { font-size: 20px; font-weight: bold; margin-bottom: 15px; }
+        .row-posters {
+            display: flex; overflow-y: hidden; overflow-x: scroll;
+            padding: 20px 0; scroll-behavior: smooth;
+        }
+        .row-posters::-webkit-scrollbar { display: none; }
+
+        .poster {
+            width: 200px; object-fit: contain; margin-right: 15px;
+            transition: transform 450ms; cursor: pointer;
+            border-radius: 4px;
+        }
+        .poster:hover { transform: scale(1.08); }
+
+        /* --- AUDIO PLAYER (HIDDEN) --- */
+        audio { display: none; }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 20px; }
+            .hero { padding: 0 20px; }
+            .hero-title { font-size: 35px; }
+            .nav-links { display: none; }
+            .poster { width: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro">
+        <div class="netflix-logo-n">N</div>
+    </div>
+
+    <audio id="audioTadum" src="https://www.myinstants.com/media/sounds/netflix-intro-sound.mp3"></audio>
+    <audio id="loveSong" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+
+    <nav class="navbar" id="nav">
+        <div class="logo">COUPLEFLIX</div>
+        <ul class="nav-links">
+            <li>Home</li>
+            <li>Memories</li>
+            <li>New & Popular</li>
+            <li>My List</li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1 class="hero-title">Our Love Era</h1>
+        <p class="hero-desc">Kisah perjalanan kita yang lebih indah dari drama Korea manapun. Menampilkan Taylor Swift sebagai soundtrack utama hidup kita.</p>
+        <div class="btn-group">
+            <button class="btn btn-play" onclick="playMusic()">
+                <i class="fas fa-play"></i> Play
+            </button>
+            <button class="btn btn-info" onclick="alert('I Love You More Than Anything!')">
+                <i class="fas fa-info-circle"></i> More Info
+            </button>
+        </div>
+    </header>
+
+    <div class="row">
+        <h2 class="row-title">Continue Watching for Us</h2>
+        <div class="row-posters">
+            <img class="poster" src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" alt="Lover Era">
+            <img class="poster" src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411" alt="Love Story TV">
+            <img class="poster" src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932" alt="Enchanted">
+            <img class="poster" src="https://picsum.photos/id/1011/200/300" alt="Date 1">
+            <img class="poster" src="https://picsum.photos/id/1012/200/300" alt="Date 2">
+            <img class="poster" src="https://picsum.photos/id/1013/200/300" alt="Date 3">
+            <img class="poster" src="https://picsum.photos/id/1014/200/300" alt="Date 4">
+        </div>
+    </div>
+
+    <div class="row">
+        <h2 class="row-title">Our Favorite Eras</h2>
+        <div class="row-posters">
+            <img class="poster" src="https://picsum.photos/id/102/200/300" alt="Era 1">
+            <img class="poster" src="https://picsum.photos/id/103/200/300" alt="Era 2">
+            <img class="poster" src="https://picsum.photos/id/104/200/300" alt="Era 3">
+            <img class="poster" src="https://picsum.photos/id/106/200/300" alt="Era 4">
+            <img class="poster" src="https://picsum.photos/id/107/200/300" alt="Era 5">
+        </div>
+    </div>
+
+    <script>
+        // Efek Navbar saat Scroll
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Intro Sound "Ta-dum"
+        window.addEventListener('DOMContentLoaded', () => {
+            const tadum = document.getElementById('audioTadum');
+            tadum.volume = 0.5;
+            // Catatan: Autoplay audio sering diblokir browser, 
+            // butuh klik user atau interaksi pertama.
+            tadum.play().catch(e => console.log("Audio waiting for interaction"));
+        });
+
+        // Music Control
+        let isPlaying = false;
+        const music = document.getElementById('loveSong');
+
+        function playMusic() {
+            if (!isPlaying) {
+                music.play();
+                document.querySelector('.btn-play').innerHTML = '<i class="fas fa-pause"></i> Pause';
+                isPlaying = true;
+            } else {
+                music.pause();
+                document.querySelector('.btn-play').innerHTML = '<i class="fas fa-play"></i> Play';
+                isPlaying = false;
+            }
+        }
+    </script>
+</body>
+</html>
