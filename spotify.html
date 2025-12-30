@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify – Our Playlist</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --spotify-green: #1DB954;
+            --spotify-black: #121212;
+            --spotify-light-black: #181818;
+            --spotify-grey: #b3b3b3;
+            --spotify-white: #ffffff;
+        }
+
+        body {
+            background-color: var(--spotify-black);
+            color: var(--spotify-white);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar - Hidden on mobile */
+        .sidebar {
+            width: 240px;
+            background-color: #000;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--spotify-grey);
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover, .nav-item.active { color: white; }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            background: linear-gradient(to bottom, #404040, var(--spotify-black));
+            overflow-y: auto;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            align-items: flex-end;
+            padding: 40px 32px;
+            gap: 24px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.5));
+        }
+
+        .album-art {
+            width: 232px;
+            height: 232px;
+            box-shadow: 0 4px 60px rgba(0,0,0,0.5);
+        }
+
+        .header-text h1 {
+            font-size: 72px;
+            margin: 8px 0;
+        }
+
+        /* Playlist Table */
+        .playlist-container {
+            padding: 20px 32px;
+        }
+
+        .controls {
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .play-btn-large {
+            width: 56px;
+            height: 56px;
+            background-color: var(--spotify-green);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: black;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: var(--spotify-grey);
+        }
+
+        th {
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 10px;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        tr:hover {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        tr:hover .song-title { color: white; }
+
+        td { padding: 12px 10px; cursor: pointer; }
+
+        .song-info { display: flex; align-items: center; gap: 12px; }
+        .song-title { color: white; font-weight: 500; display: block; }
+
+        /* Player Bar */
+        .player-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 90px;
+            background-color: #181818;
+            border-top: 1px solid #282828;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-sizing: border-box;
+        }
+
+        .current-track { display: flex; align-items: center; gap: 14px; width: 30%; }
+        .current-track img { width: 56px; height: 56px; border-radius: 4px; }
+
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 40%;
+        }
+
+        .control-buttons { display: flex; align-items: center; gap: 20px; font-size: 18px; }
+        .play-pause { font-size: 32px; color: white; cursor: pointer; }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            font-size: 11px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: #4f4f4f;
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--spotify-green);
+            border-radius: 2px;
+        }
+
+        @media (max-width: 600px) {
+            .header { flex-direction: column; align-items: center; text-align: center; }
+            .header-text h1 { font-size: 36px; }
+            .album-art { width: 180px; height: 180px; }
+            .current-track { width: 70%; }
+            .player-controls { width: 30%; }
+            .progress-container, .duration-col { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <i class="fab fa-spotify" style="font-size: 40px;"></i>
+            <a href="#" class="nav-item active"><i class="fas fa-home"></i> Home</a>
+            <a href="#" class="nav-item"><i class="fas fa-search"></i> Search</a>
+            <a href="#" class="nav-item"><i class="fas fa-book"></i> Your Library</a>
+            <div style="margin-top: 20px; font-size: 12px; color: var(--spotify-grey);">PLAYLISTS</div>
+            <a href="#" class="nav-item" style="font-size: 14px;">Our Love Story ♡</a>
+        </div>
+
+        <div class="content">
+            <div class="header">
+                <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="album-art" alt="Lover Taylor Swift">
+                <div class="header-text">
+                    <p style="font-size: 12px; font-weight: bold;">PUBLIC PLAYLIST</p>
+                    <h1>Couple Era</h1>
+                    <p>Made for <b>Us</b> • 3 Songs, 10 min 24 sec</p>
+                </div>
+            </div>
+
+            <div class="playlist-container">
+                <div class="controls">
+                    <div class="play-btn-large" onclick="togglePlay()"><i class="fas fa-play" id="mainPlayIcon"></i></div>
+                    <i class="far fa-heart" style="font-size: 32px; color: var(--spotify-grey);"></i>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th class="duration-col"><i class="far fa-clock"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tracklist">
+                        <tr onclick="playSong(0)">
+                            <td>1</td>
+                            <td>
+                                <div class="song-info">
+                                    <img src="https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349" width="40" height="40">
+                                    <div>
+                                        <span class="song-title">Lover</span>
+                                        <span>Taylor Swift</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="duration-col">3:41</td>
+                        </tr>
+                        <tr onclick="playSong(1)">
+                            <td>2</td>
+                            <td>
+                                <div class="song-info">
+                                    <img src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411" width="40" height="40">
+                                    <div>
+                                        <span class="song-title">Love Story (Taylor's Version)</span>
+                                        <span>Taylor Swift</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="duration-col">3:55</td>
+                        </tr>
+                        <tr onclick="playSong(2)">
+                            <td>3</td>
+                            <td>
+                                <div class="song-info">
+                                    <img src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932" width="40" height="40">
+                                    <div>
+                                        <span class="song-title">Enchanted</span>
+                                        <span>Taylor Swift</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="duration-col">5:52</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="player-bar">
+        <div class="current-track">
+            <img id="current-art" src="https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349" alt="Art">
+            <div>
+                <div class="song-title" id="current-title" style="font-size: 14px;">Lover</div>
+                <div style="font-size: 11px; color: var(--spotify-grey);" id="current-artist">Taylor Swift</div>
+            </div>
+        </div>
+
+        <div class="player-controls">
+            <div class="control-buttons">
+                <i class="fas fa-random" style="color: var(--spotify-grey); font-size: 14px;"></i>
+                <i class="fas fa-step-backward" onclick="prevSong()"></i>
+                <i class="fas fa-play-circle play-pause" id="playBtn" onclick="togglePlay()"></i>
+                <i class="fas fa-step-forward" onclick="nextSong()"></i>
+                <i class="fas fa-redo" style="color: var(--spotify-grey); font-size: 14px;"></i>
+            </div>
+            <div class="progress-container">
+                <span id="currentTime">0:00</span>
+                <div class="progress-bar" onclick="seek(event)">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span id="totalTime">0:00</span>
+            </div>
+        </div>
+
+        <div style="width: 30%; display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
+            <i class="fas fa-volume-up" style="color: var(--spotify-grey);"></i>
+            <div class="progress-bar" style="width: 100px;"><div class="progress-fill" style="width: 70%;"></div></div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer" src=""></audio>
+
+    <script>
+        const songs = [
+            {
+                title: "Lover",
+                artist: "Taylor Swift",
+                cover: "https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" // Ganti dengan URL lagu asli jika ada
+            },
+            {
+                title: "Love Story (TV)",
+                artist: "Taylor Swift",
+                cover: "https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+            },
+            {
+                title: "Enchanted",
+                artist: "Taylor Swift",
+                cover: "https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+            }
+        ];
+
+        let currentSongIndex = 0;
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const mainPlayIcon = document.getElementById('mainPlayIcon');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalTimeEl = document.getElementById('totalTime');
+
+        function loadSong(index) {
+            const song = songs[index];
+            document.getElementById('current-title').innerText = song.title;
+            document.getElementById('current-artist').innerText = song.artist;
+            document.getElementById('current-art').src = song.cover;
+            audio.src = song.url;
+        }
+
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
+                mainPlayIcon.classList.replace('fa-play', 'fa-pause');
+            } else {
+                audio.pause();
+                playBtn.classList.replace('fa-pause-circle', 'fa-play-circle');
+                mainPlayIcon.classList.replace('fa-pause', 'fa-play');
+            }
+        }
+
+        function playSong(index) {
+            currentSongIndex = index;
+            loadSong(index);
+            audio.play();
+            playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
+            mainPlayIcon.classList.replace('fa-play', 'fa-pause');
+        }
+
+        audio.ontimeupdate = () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = `${progress}%`;
+            
+            let curMins = Math.floor(audio.currentTime / 60);
+            let curSecs = Math.floor(audio.currentTime % 60);
+            if (curSecs < 10) curSecs = "0" + curSecs;
+            currentTimeEl.innerText = `${curMins}:${curSecs}`;
+
+            if(audio.duration) {
+                let durMins = Math.floor(audio.duration / 60);
+                let durSecs = Math.floor(audio.duration % 60);
+                if (durSecs < 10) durSecs = "0" + durSecs;
+                totalTimeEl.innerText = `${durMins}:${durSecs}`;
+            }
+        };
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            playSong(currentSongIndex);
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            playSong(currentSongIndex);
+        }
+
+        function seek(e) {
+            const width = e.target.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        // Initialize
+        loadSong(currentSongIndex);
+    </script>
+</body>
+</html>
