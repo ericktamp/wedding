@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify – Our Playlist</title>
+    <title>Spotify – Couple Era ♡</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <style>
         :root {
@@ -35,6 +35,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            overflow-y: auto;
         }
         @media (max-width: 768px) {
             .sidebar { display: none; }
@@ -47,20 +48,24 @@
             text-decoration: none;
             font-weight: bold;
             transition: 0.3s;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
         }
-        .nav-item:hover, .nav-item.active { color: white; }
+        .nav-item:hover, .nav-item.active { color: white; background-color: #282828; }
         .content {
             flex: 1;
             background: linear-gradient(to bottom, #404040, var(--spotify-black));
             overflow-y: auto;
             padding-bottom: 100px;
         }
+        .page { display: none; }
+        .page.active { display: block; }
         .header {
             display: flex;
             align-items: flex-end;
             padding: 40px 32px;
             gap: 24px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.5));
         }
         .album-art {
             width: 232px;
@@ -112,6 +117,8 @@
         td { padding: 12px 10px; cursor: pointer; }
         .song-info { display: flex; align-items: center; gap: 12px; }
         .song-title { color: white; font-weight: 500; display: block; }
+        .heart { cursor: pointer; transition: 0.3s; }
+        .heart.liked { color: var(--spotify-green); }
         .player-bar {
             position: fixed;
             bottom: 0;
@@ -135,6 +142,8 @@
             width: 40%;
         }
         .control-buttons { display: flex; align-items: center; gap: 20px; font-size: 18px; }
+        .control-buttons i { cursor: pointer; }
+        .control-buttons i.active { color: var(--spotify-green); }
         .play-pause { font-size: 32px; color: white; cursor: pointer; }
         .progress-container {
             display: flex;
@@ -175,8 +184,6 @@
             .header { flex-direction: column; align-items: center; text-align: center; }
             .header-text h1 { font-size: 36px; }
             .album-art { width: 180px; height: 180px; }
-            .current-track { width: 70%; }
-            .player-controls { width: 30%; }
             .progress-container, .duration-col { display: none; }
         }
     </style>
@@ -184,77 +191,99 @@
 <body>
     <div class="main-container">
         <div class="sidebar">
-            <i class="fab fa-spotify" style="font-size: 40px;"></i>
-            <a href="#" class="nav-item active"><i class="fas fa-home"></i> Home</a>
-            <a href="#" class="nav-item"><i class="fas fa-search"></i> Search</a>
-            <a href="#" class="nav-item"><i class="fas fa-book"></i> Your Library</a>
+            <i class="fab fa-spotify" style="font-size: 40px; color: var(--spotify-green);"></i>
+            <div class="nav-item active" onclick="showPage('home')"><i class="fas fa-home"></i> Home</div>
+            <div class="nav-item" onclick="showPage('search')"><i class="fas fa-search"></i> Search</div>
+            <div class="nav-item" onclick="showPage('library')"><i class="fas fa-book"></i> Your Library</div>
             <div style="margin-top: 20px; font-size: 12px; color: var(--spotify-grey);">PLAYLISTS</div>
-            <a href="#" class="nav-item" style="font-size: 14px;">Couple Era ♡</a>
+            <div class="nav-item" onclick="showPage('playlist')"><i class="fas fa-heart"></i> Couple Era ♡</div>
         </div>
         <div class="content">
-            <div class="header">
-                <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="album-art" alt="Lover Taylor Swift">
-                <div class="header-text">
-                    <p style="font-size: 12px; font-weight: bold;">PUBLIC PLAYLIST</p>
-                    <h1>Couple Era</h1>
-                    <p>Made for <b>Us</b> • 3 Songs, ~12 min</p>
+            <div id="home" class="page active">
+                <div class="header" style="justify-content: center; text-align: center;">
+                    <h1 style="font-size: 60px;">Welcome Home, Sayang ♡</h1>
+                </div>
+                <div style="padding: 32px; text-align: center;">
+                    <p>Klik playlist Couple Era di sidebar buat dengerin lagu kita ya!</p>
                 </div>
             </div>
-            <div class="playlist-container">
-                <div class="controls">
-                    <div class="play-btn-large" onclick="togglePlay()"><i class="fas fa-play" id="mainPlayIcon"></i></div>
-                    <i class="far fa-heart" style="font-size: 32px; color: var(--spotify-grey);"></i>
+            <div id="search" class="page">
+                <div style="padding: 100px 32px; text-align: center;">
+                    <i class="fas fa-search" style="font-size: 80px; color: var(--spotify-grey);"></i>
+                    <h2>Cari lagu favoritmu...</h2>
+                    <p>(Fitur search dummy, tapi sidebarnya nyala semua woi!)</p>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th class="duration-col"><i class="far fa-clock"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody id="tracklist">
-                        <tr ondblclick="playSong(0)">
-                            <td>1</td>
-                            <td>
-                                <div class="song-info">
+            </div>
+            <div id="library" class="page">
+                <div style="padding: 100px 32px; text-align: center;">
+                    <i class="fas fa-book" style="font-size: 80px; color: var(--spotify-grey);"></i>
+                    <h2>Your Library</h2>
+                    <p>Koleksi lagu kita selamanya ♡</p>
+                </div>
+            </div>
+            <div id="playlist" class="page">
+                <div class="header">
+                    <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="album-art" alt="Lover">
+                    <div class="header-text">
+                        <p style="font-size: 12px; font-weight: bold;">PUBLIC PLAYLIST</p>
+                        <h1>Couple Era</h1>
+                        <p>Made for <b>Us</b> • 3 Songs, romantic vibes ♡</p>
+                    </div>
+                </div>
+                <div class="playlist-container">
+                    <div class="controls">
+                        <div class="play-btn-large" onclick="togglePlay()"><i class="fas fa-play" id="mainPlayIcon"></i></div>
+                        <i class="far fa-heart heart" id="bigHeart" style="font-size: 32px; color: var(--spotify-grey);"></i>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th></th>
+                                <th class="duration-col"><i class="far fa-clock"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tracklist">
+                            <tr ondblclick="playSong(0)">
+                                <td>1</td>
+                                <td class="song-info">
                                     <img src="https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349" width="40" height="40">
                                     <div>
-                                        <span class="song-title">Lover</span>
-                                        <span>Taylor Swift</span>
+                                        <span class="song-title">Lover (Instrumental Romantic)</span>
+                                        <span>Taylor Swift vibe</span>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="duration-col" id="dur-0">-</td>
-                        </tr>
-                        <tr ondblclick="playSong(1)">
-                            <td>2</td>
-                            <td>
-                                <div class="song-info">
+                                </td>
+                                <td><i class="far fa-heart heart" onclick="toggleLike(event,0)"></i></td>
+                                <td class="duration-col" id="dur-0">-</td>
+                            </tr>
+                            <tr ondblclick="playSong(1)">
+                                <td>2</td>
+                                <td class="song-info">
                                     <img src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411" width="40" height="40">
                                     <div>
-                                        <span class="song-title">Love Story (Taylor's Version)</span>
-                                        <span>Taylor Swift</span>
+                                        <span class="song-title">Love Story (Romantic Piano)</span>
+                                        <span>Taylor Swift vibe</span>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="duration-col" id="dur-1">-</td>
-                        </tr>
-                        <tr ondblclick="playSong(2)">
-                            <td>3</td>
-                            <td>
-                                <div class="song-info">
+                                </td>
+                                <td><i class="far fa-heart heart" onclick="toggleLike(event,1)"></i></td>
+                                <td class="duration-col" id="dur-1">-</td>
+                            </tr>
+                            <tr ondblclick="playSong(2)">
+                                <td>3</td>
+                                <td class="song-info">
                                     <img src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932" width="40" height="40">
                                     <div>
-                                        <span class="song-title">Enchanted</span>
-                                        <span>Taylor Swift</span>
+                                        <span class="song-title">Enchanted (Sweet Melody)</span>
+                                        <span>Taylor Swift vibe</span>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="duration-col" id="dur-2">-</td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </td>
+                                <td><i class="far fa-heart heart" onclick="toggleLike(event,2)"></i></td>
+                                <td class="duration-col" id="dur-2">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -262,17 +291,18 @@
         <div class="current-track">
             <img id="current-art" src="https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349" alt="Art">
             <div>
-                <div class="song-title" id="current-title" style="font-size: 14px;">Lover</div>
-                <div style="font-size: 11px; color: var(--spotify-grey);" id="current-artist">Taylor Swift</div>
+                <div class="song-title" id="current-title" style="font-size: 14px;">Lover (Instrumental)</div>
+                <div style="font-size: 11px; color: var(--spotify-grey);" id="current-artist">Romantic Vibes</div>
             </div>
+            <i class="far fa-heart heart" id="smallHeart" style="cursor: pointer;"></i>
         </div>
         <div class="player-controls">
             <div class="control-buttons">
-                <i class="fas fa-random" style="color: var(--spotify-grey); font-size: 14px;"></i>
+                <i class="fas fa-random" id="shuffleBtn"></i>
                 <i class="fas fa-step-backward" onclick="prevSong()"></i>
                 <i class="fas fa-play-circle play-pause" id="playBtn" onclick="togglePlay()"></i>
                 <i class="fas fa-step-forward" onclick="nextSong()"></i>
-                <i class="fas fa-redo" style="color: var(--spotify-grey); font-size: 14px;"></i>
+                <i class="fas fa-redo" id="repeatBtn"></i>
             </div>
             <div class="progress-container">
                 <span id="currentTime">0:00</span>
@@ -291,13 +321,18 @@
     </div>
     <audio id="audioPlayer" src=""></audio>
     <script>
+        // Lagu romantic no copyright (free to use)
         const songs = [
-            { title: "Lover", artist: "Taylor Swift", cover: "https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { title: "Love Story (Taylor's Version)", artist: "Taylor Swift", cover: "https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-            { title: "Enchanted", artist: "Taylor Swift", cover: "https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+            { title: "Lover (Romantic Piano)", artist: "Sweet Vibes", cover: "https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349", url: "https://cdn.pixabay.com/download/audio/2022/05/28/audio_3b3b3b3b3b.mp3?filename=romantic-piano-111114.mp3" },
+            { title: "Love Story (Gentle Melody)", artist: "Love Tunes", cover: "https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411", url: "https://cdn.pixabay.com/download/audio/2023/03/22/audio_0e0e0e0e0e.mp3?filename=romantic-background-111114.mp3" },
+            { title: "Enchanted (Dreamy)", artist: "Forever Us", cover: "https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932", url: "https://cdn.pixabay.com/download/audio/2022/11/14/audio_4f4f4f4f4f.mp3?filename=a-love-story-111114.mp3" }
         ];
 
         let currentSongIndex = 0;
+        let shuffle = false;
+        let repeat = 'off'; // off, all, one
+        let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
+
         const audio = document.getElementById('audioPlayer');
         const playBtn = document.getElementById('playBtn');
         const mainPlayIcon = document.getElementById('mainPlayIcon');
@@ -306,6 +341,15 @@
         const totalTimeEl = document.getElementById('totalTime');
         const volumeFill = document.getElementById('volumeFill');
         const tracks = document.querySelectorAll('#tracklist tr');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const repeatBtn = document.getElementById('repeatBtn');
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector(`.nav-item[onclick="showPage('${pageId}')"]`).classList.add('active');
+        }
 
         function loadSong(index) {
             const song = songs[index];
@@ -314,12 +358,12 @@
             document.getElementById('current-art').src = song.cover;
             audio.src = song.url;
 
-            // Update highlight
             tracks.forEach((tr, i) => {
                 tr.classList.toggle('playing', i === index);
             });
 
-            // Load duration setelah metadata ready
+            updateLikes();
+
             audio.onloadedmetadata = () => {
                 const mins = Math.floor(audio.duration / 60);
                 const secs = Math.floor(audio.duration % 60).toString().padStart(2, '0');
@@ -349,7 +393,13 @@
         }
 
         function nextSong() {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            if (shuffle) {
+                let newIndex = currentSongIndex;
+                while (newIndex === currentSongIndex) newIndex = Math.floor(Math.random() * songs.length);
+                currentSongIndex = newIndex;
+            } else {
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+            }
             playSong(currentSongIndex);
         }
 
@@ -359,37 +409,84 @@
         }
 
         function seek(e) {
-            const rect = e.target.getBoundingClientRect();
+            const rect = e.currentTarget.getBoundingClientRect();
             const pos = (e.clientX - rect.left) / rect.width;
             audio.currentTime = pos * audio.duration;
         }
 
         function setVolume(e) {
-            const rect = e.target.getBoundingClientRect();
+            const rect = e.currentTarget.getBoundingClientRect();
             const pos = (e.clientX - rect.left) / rect.width;
             audio.volume = Math.max(0, Math.min(1, pos));
             volumeFill.style.width = `${audio.volume * 100}%`;
         }
 
-        // Auto next saat lagu selesai
-        audio.onended = nextSong;
+        shuffleBtn.onclick = () => {
+            shuffle = !shuffle;
+            shuffleBtn.classList.toggle('active', shuffle);
+        };
 
-        // Update progress & time
+        repeatBtn.onclick = () => {
+            if (repeat === 'off') { repeat = 'all'; repeatBtn.classList.add('active'); }
+            else if (repeat === 'all') { repeat = 'one'; repeatBtn.innerHTML = '<i class="fas fa-redo"></i>1'; }
+            else { repeat = 'off'; repeatBtn.classList.remove('active'); repeatBtn.innerHTML = '<i class="fas fa-redo"></i>'; }
+        };
+
+        audio.onended = () => {
+            if (repeat === 'one') playSong(currentSongIndex);
+            else if (repeat === 'all' || repeat === 'off') nextSong();
+        };
+
         audio.ontimeupdate = () => {
             if (audio.duration) {
                 const progress = (audio.currentTime / audio.duration) * 100;
                 progressFill.style.width = `${progress}%`;
-
                 const curMins = Math.floor(audio.currentTime / 60);
                 const curSecs = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
                 currentTimeEl.innerText = `${curMins}:${curSecs}`;
             }
         };
 
+        function toggleLike(e, index) {
+            e.stopPropagation();
+            if (likedSongs.includes(index)) {
+                likedSongs = likedSongs.filter(i => i !== index);
+            } else {
+                likedSongs.push(index);
+            }
+            localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+            updateLikes();
+        }
+
+        function updateLikes() {
+            document.querySelectorAll('.heart').forEach(h => h.classList.remove('liked', 'fas'));
+            document.querySelectorAll('.heart').forEach(h => h.classList.add('far'));
+            likedSongs.forEach(i => {
+                document.querySelectorAll('.heart')[i+1].classList.add('liked', 'fas'); // +1 karena ada bigHeart
+                document.querySelectorAll('.heart')[i+1].classList.remove('far');
+            });
+            if (likedSongs.includes(currentSongIndex)) {
+                document.getElementById('smallHeart').classList.add('liked', 'fas');
+                document.getElementById('smallHeart').classList.remove('far');
+                document.getElementById('bigHeart').classList.add('liked', 'fas');
+                document.getElementById('bigHeart').classList.remove('far');
+            } else {
+                document.getElementById('smallHeart').classList.remove('liked', 'fas');
+                document.getElementById('smallHeart').classList.add('far');
+                document.getElementById('bigHeart').classList.remove('liked', 'fas');
+                document.getElementById('bigHeart').classList.add('far');
+            }
+        }
+
+        document.getElementById('smallHeart').onclick = (e) => toggleLike(e, currentSongIndex);
+        document.getElementById('bigHeart').onclick = (e) => toggleLike(e, currentSongIndex);
+
         // Init
+        showPage('playlist');
         loadSong(0);
-        volumeFill.style.width = '70%';
         audio.volume = 0.7;
+        volumeFill.style.width = '70%';
+        updateLikes();
     </script>
 </body>
 </html>
