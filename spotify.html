@@ -2,317 +2,276 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify - Our Memories</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spotify - For You</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --sp-black: #000000;
-            --sp-dark-grey: #121212;
-            --sp-light-grey: #242424;
-            --sp-grey: #b3b3b3;
+            --sp-black: #121212;
+            --sp-light-black: #181818;
             --sp-green: #1DB954;
+            --sp-grey: #b3b3b3;
             --sp-white: #ffffff;
+            --nav-bg: rgba(0,0,0,0.9);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Circular', 'Gotham', 'Helvetica Neue', Arial, sans-serif; }
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             background-color: var(--sp-black);
             color: var(--sp-white);
-            height: 100vh;
-            display: grid;
-            grid-template-areas: 
-                "sidebar main activity"
-                "player player player";
-            grid-template-columns: 280px 1fr 280px;
-            grid-template-rows: 1fr 90px;
-            overflow: hidden;
+            overflow-x: hidden;
+            padding-bottom: 150px; /* Space for nav & player */
         }
 
-        /* --- SIDEBAR LEFT --- */
-        .sidebar {
-            grid-area: sidebar;
-            background-color: var(--sp-black);
-            padding: 8px;
+        /* --- HEADER --- */
+        .header {
+            padding: 40px 16px 20px;
+            background: linear-gradient(to bottom, #453080 0%, var(--sp-black) 100%);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .playlist-img {
+            width: 150px;
+            height: 150px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+
+        .playlist-info h1 { font-size: 24px; margin-bottom: 8px; }
+        .playlist-info p { color: var(--sp-grey); font-size: 13px; }
+
+        /* --- CONTROLS --- */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px 20px;
+        }
+
+        .control-left { display: flex; gap: 20px; align-items: center; color: var(--sp-grey); font-size: 20px; }
+        .play-btn {
+            width: 50px; height: 50px;
+            background-color: var(--sp-green);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            color: black; font-size: 20px;
+        }
+
+        /* --- TRACKLIST --- */
+        .track-list { padding: 0 16px; }
+        .track-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .track-meta { display: flex; gap: 12px; align-items: center; }
+        .track-meta img { width: 45px; height: 45px; border-radius: 4px; }
+        .track-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+        .track-artist { font-size: 12px; color: var(--sp-grey); }
+
+        /* --- MINI PLAYER (MOBILE STYLE) --- */
+        .mini-player {
+            position: fixed;
+            bottom: 70px;
+            left: 8px;
+            right: 8px;
+            height: 56px;
+            background-color: #3d2b7a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            z-index: 999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .mini-info { display: flex; align-items: center; gap: 10px; flex: 1; }
+        .mini-info img { width: 38px; height: 38px; border-radius: 4px; }
+        .mini-text h4 { font-size: 12px; }
+        .mini-text p { font-size: 10px; color: #ccc; }
+
+        .mini-controls { display: flex; gap: 20px; font-size: 20px; }
+
+        .progress-line {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            right: 10px;
+            height: 2px;
+            background: rgba(255,255,255,0.2);
+        }
+        .progress-inner { height: 100%; background: white; width: 30%; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 65px;
+            background: linear-gradient(to top, black, var(--sp-black));
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-link {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            color: var(--sp-grey);
+            font-size: 10px;
+            text-decoration: none;
+            gap: 5px;
         }
 
-        .side-card {
-            background-color: var(--sp-dark-grey);
-            border-radius: 8px;
-            padding: 12px 20px;
-        }
+        .nav-link.active { color: white; }
+        .nav-link i { font-size: 22px; }
 
-        .nav-item {
-            display: flex; align-items: center; gap: 20px;
-            height: 40px; color: var(--sp-grey);
-            text-decoration: none; font-weight: bold; font-size: 14px;
-            transition: 0.3s;
-        }
+        /* Typography tweaks */
+        h2.section-title { padding: 20px 16px 15px; font-size: 18px; }
 
-        .nav-item:hover, .nav-item.active { color: white; }
-        .nav-item i { font-size: 20px; }
-
-        .library { flex: 1; }
-        .lib-header { display: flex; justify-content: space-between; align-items: center; color: var(--sp-grey); margin-bottom: 20px; }
-        
-        .playlist-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 8px; border-radius: 4px; cursor: pointer;
-        }
-        .playlist-item:hover { background-color: var(--sp-light-grey); }
-        .playlist-item img { width: 48px; height: 48px; border-radius: 4px; object-fit: cover; }
-        .playlist-item div p { font-size: 14px; font-weight: 500; }
-        .playlist-item div span { font-size: 12px; color: var(--sp-grey); }
-
-        /* --- MAIN CONTENT --- */
-        .main {
-            grid-area: main;
-            background: linear-gradient(to bottom, #5038a0, var(--sp-dark-grey) 40%);
-            overflow-y: auto;
-            border-radius: 8px;
-            margin-top: 8px;
-            position: relative;
-        }
-
-        .main-header {
-            display: flex; align-items: flex-end;
-            padding: 80px 24px 24px 24px;
-            gap: 24px;
-        }
-
-        .album-img {
-            width: 232px; height: 232px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-        }
-
-        .album-info h1 { font-size: 72px; margin: 8px 0; letter-spacing: -3px; }
-        .album-info p { font-size: 14px; font-weight: bold; }
-
-        .list-container { padding: 24px; background: rgba(0,0,0,0.2); min-height: 100%; }
-        
-        .controls-main { display: flex; align-items: center; gap: 32px; margin-bottom: 30px; }
-        .play-big {
-            width: 56px; height: 56px; background-color: var(--sp-green);
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            color: black; font-size: 20px; cursor: pointer; transition: 0.2s;
-        }
-        .play-big:hover { transform: scale(1.05); }
-
-        table { width: 100%; border-collapse: collapse; color: var(--sp-grey); font-size: 14px; }
-        th { text-align: left; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        tr:hover { background-color: rgba(255,255,255,0.1); }
-        td { padding: 12px 10px; cursor: pointer; }
-        .active-song { color: var(--sp-green); }
-
-        /* --- FRIEND ACTIVITY (SIDEBAR RIGHT) --- */
-        .activity {
-            grid-area: activity;
-            background-color: var(--sp-black);
-            padding: 16px;
-            display: flex; flex-direction: column; gap: 20px;
-        }
-        .friend-item { display: flex; gap: 12px; font-size: 12px; color: var(--sp-grey); }
-        .friend-item img { width: 32px; height: 32px; border-radius: 50%; }
-        .friend-item b { color: white; }
-
-        /* --- PLAYER BAR --- */
-        .player {
-            grid-area: player;
-            background-color: black;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 16px;
-        }
-
-        .now-playing { display: flex; align-items: center; gap: 15px; width: 30%; }
-        .now-playing img { width: 56px; height: 56px; border-radius: 4px; }
-        .now-playing h4 { font-size: 14px; }
-        .now-playing p { font-size: 11px; color: var(--sp-grey); }
-
-        .player-controls { width: 40%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .btns { display: flex; align-items: center; gap: 25px; font-size: 18px; color: var(--sp-grey); }
-        .play-pause { font-size: 35px; color: white; cursor: pointer; }
-
-        .progress-bar-container { display: flex; align-items: center; gap: 10px; width: 100%; font-size: 11px; color: var(--sp-grey); }
-        .progress-bg { flex: 1; height: 4px; background: #4f4f4f; border-radius: 2px; position: relative; cursor: pointer; }
-        .progress-fill { width: 30%; height: 100%; background: white; border-radius: 2px; transition: 0.1s; }
-        .progress-bg:hover .progress-fill { background: var(--sp-green); }
-
-        .volume-controls { width: 30%; display: flex; justify-content: flex-end; align-items: center; gap: 12px; color: var(--sp-grey); }
-
-        @media (max-width: 1000px) { .activity { display: none; } body { grid-template-columns: 280px 1fr; } }
-        @media (max-width: 768px) { .sidebar { display: none; } body { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="side-card">
-            <a href="#" class="nav-item active"><i class="fas fa-home"></i> Home</a>
-            <a href="#" class="nav-item"><i class="fas fa-search"></i> Search</a>
-        </div>
-        <div class="side-card library">
-            <div class="lib-header">
-                <span><i class="fas fa-book" style="margin-right: 10px;"></i> Your Library</span>
-                <i class="fas fa-plus"></i>
+    <div class="header">
+        <div class="header-top">
+            <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="playlist-img" alt="Cover">
+            <div class="playlist-info">
+                <h1>Our Love Era</h1>
+                <p><i class="fab fa-spotify" style="color:var(--sp-green)"></i> Spotify • 12,405 Likes</p>
             </div>
-            <div class="playlist-item">
-                <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" alt="Lover">
-                <div>
-                    <p>Our Love Era</p>
-                    <span>Playlist • You</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control-left">
+            <i class="far fa-heart"></i>
+            <i class="fas fa-arrow-alt-circle-down"></i>
+            <i class="fas fa-ellipsis-v"></i>
+        </div>
+        <div class="play-btn" onclick="togglePlay()">
+            <i class="fas fa-play" id="playIcon"></i>
+        </div>
+    </div>
+
+    <h2 class="section-title">Recommended for You</h2>
+
+    <div class="track-list">
+        <div class="track-item" onclick="playSong('Lover', 'Taylor Swift', 'https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349')">
+            <div class="track-meta">
+                <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349">
+                <div class="track-text">
+                    <div class="track-name">Lover</div>
+                    <div class="track-artist">Taylor Swift</div>
                 </div>
             </div>
-            <div class="playlist-item">
-                <img src="https://picsum.photos/id/102/100/100" alt="Random">
-                <div>
-                    <p>Late Night Chats</p>
-                    <span>Playlist • You</span>
+            <i class="fas fa-ellipsis-h" style="color:var(--sp-grey)"></i>
+        </div>
+
+        <div class="track-item" onclick="playSong('Love Story (TV)', 'Taylor Swift', 'https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411')">
+            <div class="track-meta">
+                <img src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411">
+                <div class="track-text">
+                    <div class="track-name">Love Story (TV)</div>
+                    <div class="track-artist">Taylor Swift</div>
                 </div>
             </div>
+            <i class="fas fa-ellipsis-h" style="color:var(--sp-grey)"></i>
+        </div>
+
+        <div class="track-item" onclick="playSong('Enchanted', 'Taylor Swift', 'https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932')">
+            <div class="track-meta">
+                <img src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932">
+                <div class="track-text">
+                    <div class="track-name">Enchanted</div>
+                    <div class="track-artist">Taylor Swift</div>
+                </div>
+            </div>
+            <i class="fas fa-ellipsis-h" style="color:var(--sp-grey)"></i>
         </div>
     </div>
 
-    <div class="main">
-        <div class="main-header">
-            <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="album-img" alt="Lover Cover">
-            <div class="album-info">
-                <p>Public Playlist</p>
-                <h1>Couple Era</h1>
-                <p><b>You</b> • 3 songs, about 12 min</p>
+    <div class="mini-player">
+        <div class="mini-info">
+            <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" id="miniArt">
+            <div class="mini-text">
+                <h4 id="miniTitle">Lover</h4>
+                <p id="miniArtist">Taylor Swift</p>
             </div>
         </div>
-
-        <div class="list-container">
-            <div class="controls-main">
-                <div class="play-big" id="mainPlayBtn" onclick="togglePlay()"><i class="fas fa-play"></i></div>
-                <i class="far fa-heart" style="font-size: 32px; color: var(--sp-grey);"></i>
-                <i class="fas fa-ellipsis-h" style="font-size: 24px; color: var(--sp-grey);"></i>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Album</th>
-                        <th><i class="far fa-clock"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr onclick="playSong(0)">
-                        <td>1</td>
-                        <td class="active-song">Lover</td>
-                        <td>Lover</td>
-                        <td>3:41</td>
-                    </tr>
-                    <tr onclick="playSong(1)">
-                        <td>2</td>
-                        <td>Love Story (TV)</td>
-                        <td>Fearless</td>
-                        <td>3:55</td>
-                    </tr>
-                    <tr onclick="playSong(2)">
-                        <td>3</td>
-                        <td>Enchanted</td>
-                        <td>Speak Now</td>
-                        <td>5:52</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="mini-controls">
+            <i class="fas fa-desktop" style="font-size: 14px; color: var(--sp-green); align-self: center;"></i>
+            <i class="fas fa-play" id="miniPlayIcon" onclick="togglePlay()"></i>
+        </div>
+        <div class="progress-line">
+            <div class="progress-inner" id="miniProgress"></div>
         </div>
     </div>
 
-    <div class="activity">
-        <h4 style="font-size: 14px;">Friend Activity</h4>
-        <div class="friend-item">
-            <img src="https://picsum.photos/id/64/50/50" alt="Avatar">
-            <div>
-                <p><b>Pacar Kamu</b></p>
-                <p>Lover - Taylor Swift</p>
-                <span><i class="fas fa-record-vinyl"></i> Our Memories</span>
-            </div>
-        </div>
-    </div>
+    <nav class="bottom-nav">
+        <a href="#" class="nav-link active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-link">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+        </a>
+        <a href="#" class="nav-link">
+            <i class="fas fa-book"></i>
+            <span>Library</span>
+        </a>
+    </nav>
 
-    <div class="player">
-        <div class="now-playing">
-            <img id="track-art" src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" alt="Art">
-            <div>
-                <h4 id="track-title">Lover</h4>
-                <p id="track-artist">Taylor Swift</p>
-            </div>
-            <i class="far fa-heart" style="margin-left: 10px; font-size: 14px;"></i>
-        </div>
-
-        <div class="player-controls">
-            <div class="btns">
-                <i class="fas fa-random"></i>
-                <i class="fas fa-step-backward"></i>
-                <i class="fas fa-play-circle play-pause" id="masterPlay" onclick="togglePlay()"></i>
-                <i class="fas fa-step-forward"></i>
-                <i class="fas fa-redo"></i>
-            </div>
-            <div class="progress-bar-container">
-                <span id="currTime">0:00</span>
-                <div class="progress-bg"><div class="progress-fill" id="progBar"></div></div>
-                <span id="totalTime">3:41</span>
-            </div>
-        </div>
-
-        <div class="volume-controls">
-            <i class="fas fa-microphone"></i>
-            <i class="fas fa-list"></i>
-            <i class="fas fa-volume-up"></i>
-            <div class="progress-bg" style="width: 100px;"><div class="progress-fill" style="width: 70%;"></div></div>
-        </div>
-    </div>
-
-    <audio id="audioPlayer" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
     <script>
-        const audio = document.getElementById('audioPlayer');
-        const playBtn = document.getElementById('masterPlay');
-        const progBar = document.getElementById('progBar');
-        let isPlaying = false;
+        const audio = document.getElementById('audio');
+        const playIcon = document.getElementById('playIcon');
+        const miniPlayIcon = document.getElementById('miniPlayIcon');
+        const miniProgress = document.getElementById('miniProgress');
 
         function togglePlay() {
             if (audio.paused) {
                 audio.play();
-                playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
-                isPlaying = true;
+                playIcon.classList.replace('fa-play', 'fa-pause');
+                miniPlayIcon.classList.replace('fa-play', 'fa-pause');
             } else {
                 audio.pause();
-                playBtn.classList.replace('fa-pause-circle', 'fa-play-circle');
-                isPlaying = false;
+                playIcon.classList.replace('fa-pause', 'fa-play');
+                miniPlayIcon.classList.replace('fa-pause', 'fa-play');
             }
         }
 
-        audio.ontimeupdate = () => {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            progBar.style.width = percent + "%";
-            
-            let m = Math.floor(audio.currentTime / 60);
-            let s = Math.floor(audio.currentTime % 60);
-            document.getElementById('currTime').innerText = m + ":" + (s < 10 ? '0'+s : s);
-        };
-
-        function playSong(id) {
-            // Dummy logic: change title and play
-            const titles = ["Lover", "Love Story (TV)", "Enchanted"];
-            const covers = [
-                "https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349",
-                "https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411",
-                "https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932"
-            ];
-            document.getElementById('track-title').innerText = titles[id];
-            document.getElementById('track-art').src = covers[id];
+        function playSong(title, artist, img) {
+            document.getElementById('miniTitle').innerText = title;
+            document.getElementById('miniArtist').innerText = artist;
+            document.getElementById('miniArt').src = img;
             audio.currentTime = 0;
             audio.play();
-            playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
+            playIcon.classList.replace('fa-play', 'fa-pause');
+            miniPlayIcon.classList.replace('fa-play', 'fa-pause');
+        }
+
+        audio.ontimeupdate = () => {
+            const p = (audio.currentTime / audio.duration) * 100;
+            miniProgress.style.width = p + "%";
         }
     </script>
 </body>
