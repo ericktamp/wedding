@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safari - Our Love Story</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body {
+            /* Background khas macOS Big Sur/Monterey */
+            background: url('https://images.unsplash.com/photo-1611003228941-98a52e66f2ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- SAFARI TOP BAR --- */
+        .safari-toolbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .window-controls { display: flex; gap: 8px; width: 200px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #FF5F57; }
+        .yellow { background: #FFBD2E; }
+        .green { background: #28C840; }
+
+        .address-bar {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 6px 15px;
+            border-radius: 8px;
+            width: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 13px;
+            gap: 10px;
+        }
+
+        .address-bar i { color: #666; font-size: 12px; }
+
+        .top-right-icons { display: flex; gap: 20px; color: #555; width: 200px; justify-content: flex-end; }
+
+        /* --- MAIN CONTENT AREA --- */
+        .safari-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+            text-align: center;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .start-page-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* --- FAVORITES GRID --- */
+        .section-label {
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 50px;
+            padding: 0 20px;
+        }
+
+        .fav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .fav-item:hover { transform: translateY(-5px); }
+
+        .fav-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .fav-name { font-size: 12px; font-weight: 400; }
+
+        /* --- PRIVACY REPORT CARD --- */
+        .privacy-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 760px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .privacy-icon { font-size: 40px; color: #fff; }
+        .privacy-text h3 { font-size: 16px; margin-bottom: 4px; }
+        .privacy-text p { font-size: 13px; opacity: 0.8; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            padding: 10px 20px;
+            border-radius: 40px;
+            display: flex;
+            gap: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .bottom-nav i { color: white; font-size: 20px; cursor: pointer; opacity: 0.8; }
+        .bottom-nav i:hover { opacity: 1; transform: scale(1.1); }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .address-bar { width: 60%; }
+            .window-controls, .top-right-icons { width: auto; }
+            .start-page-title { font-size: 24px; }
+            .favorites-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="safari-toolbar">
+        <div class="window-controls">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+        <div class="address-bar">
+            <i class="fas fa-lock"></i>
+            <span>our-love-journey.com</span>
+            <i class="fas fa-redo"></i>
+        </div>
+        <div class="top-right-icons">
+            <i class="fas fa-share"></i>
+            <i class="fas fa-plus"></i>
+            <i class="fas fa-layer-group"></i>
+        </div>
+    </div>
+
+    <div class="safari-content">
+        <h1 class="start-page-title">Favorites</h1>
+
+        <div class="favorites-grid">
+            <div class="fav-item" onclick="showMsg('Memories')">
+                <div class="fav-icon" style="background: #FF9500;"><i class="fas fa-heart"></i></div>
+                <span class="fav-name">Memories</span>
+            </div>
+            <div class="fav-item" onclick="showMsg('Gallery')">
+                <div class="fav-icon" style="background: #34C759;"><i class="fas fa-images"></i></div>
+                <span class="fav-name">Gallery</span>
+            </div>
+            <div class="fav-item" onclick="showMsg('Taylor Swift')">
+                <div class="fav-icon" style="background: #5856D6;"><i class="fab fa-itunes-note"></i></div>
+                <span class="fav-name">Taylor Swift</span>
+            </div>
+            <div class="fav-item" onclick="showMsg('Dates')">
+                <div class="fav-icon" style="background: #FF2D55;"><i class="fas fa-calendar-alt"></i></div>
+                <span class="fav-name">Dates</span>
+            </div>
+            <div class="fav-item" onclick="window.location.reload()">
+                <div class="fav-icon"><i class="fas fa-plus" style="color: #aaa;"></i></div>
+                <span class="fav-name">Add</span>
+            </div>
+        </div>
+
+        <div class="section-label">Privacy Report</div>
+        <div class="privacy-card">
+            <div class="privacy-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="privacy-text">
+                <h3>99+ Trackers Prevented</h3>
+                <p>Safari has prevented 99+ bad vibes and arguments from profiling you in the last 30 days. Your love is secure.</p>
+            </div>
+        </div>
+
+        <div class="section-label" style="margin-top: 40px;">Siri Suggestions</div>
+        <p style="font-size: 14px; opacity: 0.7;">"Siri suggest you to say 'I Love You' right now."</p>
+    </div>
+
+    <div class="bottom-nav">
+        <i class="fas fa-chevron-left" onclick="alert('No going back in our relationship!')"></i>
+        <i class="fas fa-chevron-right"></i>
+        <i class="fas fa-share-square"></i>
+        <i class="fas fa-book-open"></i>
+        <i class="fas fa-clone"></i>
+    </div>
+
+    <script>
+        function showMsg(type) {
+            alert("Opening " + type + " era... \nEverything in this folder is about us!");
+        }
+
+        // Simulating address bar interaction
+        document.querySelector('.address-bar').addEventListener('click', function() {
+            let url = prompt("Enter URL:", "https://www.our-future.com");
+            if(url) {
+                alert("Redirecting to your happy future...");
+            }
+        });
+    </script>
+
+</body>
+</html>
