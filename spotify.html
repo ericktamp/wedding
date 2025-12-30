@@ -3,566 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify – Our Playlist</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <title>Spotify - Our Memories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --spotify-green: #1DB954;
-            --spotify-black: #121212;
-            --spotify-light-black: #181818;
-            --spotify-grey: #b3b3b3;
-            --spotify-white: #ffffff;
+            --sp-black: #000000;
+            --sp-dark-grey: #121212;
+            --sp-light-grey: #242424;
+            --sp-grey: #b3b3b3;
+            --sp-green: #1DB954;
+            --sp-white: #ffffff;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Circular', 'Gotham', 'Helvetica Neue', Arial, sans-serif; }
 
         body {
-            background-color: var(--spotify-black);
-            color: var(--spotify-white);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
+            background-color: var(--sp-black);
+            color: var(--sp-white);
             height: 100vh;
+            display: grid;
+            grid-template-areas: 
+                "sidebar main activity"
+                "player player player";
+            grid-template-columns: 280px 1fr 280px;
+            grid-template-rows: 1fr 90px;
             overflow: hidden;
         }
 
-        /* Main Container */
-        .main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* Sidebar - Hidden on mobile */
+        /* --- SIDEBAR LEFT --- */
         .sidebar {
-            width: 240px;
-            background-color: #000;
-            padding: 20px;
+            grid-area: sidebar;
+            background-color: var(--sp-black);
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 8px;
         }
 
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
+        .side-card {
+            background-color: var(--sp-dark-grey);
+            border-radius: 8px;
+            padding: 12px 20px;
         }
 
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: var(--spotify-grey);
-            text-decoration: none;
-            font-weight: bold;
+            display: flex; align-items: center; gap: 20px;
+            height: 40px; color: var(--sp-grey);
+            text-decoration: none; font-weight: bold; font-size: 14px;
             transition: 0.3s;
         }
 
         .nav-item:hover, .nav-item.active { color: white; }
+        .nav-item i { font-size: 20px; }
 
-        /* Main Content */
-        .content {
-            flex: 1;
-            background: linear-gradient(to bottom, #404040, var(--spotify-black));
-            overflow-y: auto;
-            padding-bottom: 100px; /* Space for player bar */
-        }
-
-        .header {
-            display: flex;
-            align-items: flex-end;
-            padding: 40px 32px;
-            gap: 24px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.5));
-        }
-
-        .album-art {
-            width: 232px;
-            height: 232px;
-            box-shadow: 0 4px 60px rgba(0,0,0,0.5);
-        }
-
-        .header-text h1 {
-            font-size: 72px;
-            margin: 8px 0;
-        }
-
-        /* Playlist Table */
-        .playlist-container {
-            padding: 20px 32px;
-        }
-
-        .controls {
-            padding: 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .play-btn-large {
-            width: 56px;
-            height: 56px;
-            background-color: var(--spotify-green);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            color: black;
-            cursor: pointer;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            color: var(--spotify-grey);
-        }
-
-        th {
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 10px;
-            text-transform: uppercase;
-            font-size: 12px;
-        }
-
-        tr:hover {
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 4px;
-        }
-
-        tr:hover .song-title { color: white; }
-
-        td { padding: 12px 10px; cursor: pointer; }
-
-        .song-info { display: flex; align-items: center; gap: 12px; }
-        .song-title { color: white; font-weight: 500; display: block; }
-
-        /* Player Bar */
-        .player-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 90px;
-            background-color: #181818;
-            border-top: 1px solid #282828;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            box-sizing: border-box;
-        }
-
-        .current-track { display: flex; align-items: center; gap: 14px; width: 30%; }
-        .current-track img { width: 56px; height: 56px; border-radius: 4px; }
-
-        .player-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            width: 40%;
-        }
-
-        .control-buttons { display: flex; align-items: center; gap: 20px; font-size: 18px; }
-        .play-pause { font-size: 32px; color: white; cursor: pointer; }
-
-        .progress-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            font-size: 11px;
-        }
-
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            background: #4f4f4f;
-            border-radius: 2px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: var(--spotify-green);
-            border-radius: 2px;
-        }
-
-        /* Your Library Content */
-        .library-content {
-            padding: 40px 32px;
-            display: none; /* Hidden by default */
-        }
-
-        .library-content h2 {
-            font-size: 32px;
-            margin-bottom: 24px;
-        }
-
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-
-        .photo-item {
-            border: 2px solid transparent;
-            transition: border-color 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px; /* Slightly rounded corners */
-        }
-
-        .photo-item:hover {
-            border-color: var(--spotify-green);
-        }
-
-        .photo-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 6px; /* Slightly smaller rounded corners for image */
-        }
+        .library { flex: 1; }
+        .lib-header { display: flex; justify-content: space-between; align-items: center; color: var(--sp-grey); margin-bottom: 20px; }
         
-        .photo-item-caption {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .playlist-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 8px; border-radius: 4px; cursor: pointer;
+        }
+        .playlist-item:hover { background-color: var(--sp-light-grey); }
+        .playlist-item img { width: 48px; height: 48px; border-radius: 4px; object-fit: cover; }
+        .playlist-item div p { font-size: 14px; font-weight: 500; }
+        .playlist-item div span { font-size: 12px; color: var(--sp-grey); }
+
+        /* --- MAIN CONTENT --- */
+        .main {
+            grid-area: main;
+            background: linear-gradient(to bottom, #5038a0, var(--sp-dark-grey) 40%);
+            overflow-y: auto;
+            border-radius: 8px;
+            margin-top: 8px;
+            position: relative;
         }
 
-        .photo-item:hover .photo-item-caption {
-            opacity: 1;
+        .main-header {
+            display: flex; align-items: flex-end;
+            padding: 80px 24px 24px 24px;
+            gap: 24px;
         }
 
-        /* Media Queries */
-        @media (max-width: 600px) {
-            .header { flex-direction: column; align-items: center; text-align: center; padding: 20px 16px; }
-            .header-text h1 { font-size: 36px; }
-            .album-art { width: 180px; height: 180px; }
-            .current-track { width: 70%; }
-            .player-controls { width: 30%; gap: 4px; }
-            .control-buttons { gap: 10px; }
-            .progress-container, .duration-col { display: none; }
-            .player-bar { padding: 0 8px; }
-            .current-track img { width: 40px; height: 40px; }
-            .song-info img { display: none; } /* Hide album art in playlist table on small screens */
+        .album-img {
+            width: 232px; height: 232px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5);
         }
+
+        .album-info h1 { font-size: 72px; margin: 8px 0; letter-spacing: -3px; }
+        .album-info p { font-size: 14px; font-weight: bold; }
+
+        .list-container { padding: 24px; background: rgba(0,0,0,0.2); min-height: 100%; }
+        
+        .controls-main { display: flex; align-items: center; gap: 32px; margin-bottom: 30px; }
+        .play-big {
+            width: 56px; height: 56px; background-color: var(--sp-green);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: black; font-size: 20px; cursor: pointer; transition: 0.2s;
+        }
+        .play-big:hover { transform: scale(1.05); }
+
+        table { width: 100%; border-collapse: collapse; color: var(--sp-grey); font-size: 14px; }
+        th { text-align: left; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        tr:hover { background-color: rgba(255,255,255,0.1); }
+        td { padding: 12px 10px; cursor: pointer; }
+        .active-song { color: var(--sp-green); }
+
+        /* --- FRIEND ACTIVITY (SIDEBAR RIGHT) --- */
+        .activity {
+            grid-area: activity;
+            background-color: var(--sp-black);
+            padding: 16px;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        .friend-item { display: flex; gap: 12px; font-size: 12px; color: var(--sp-grey); }
+        .friend-item img { width: 32px; height: 32px; border-radius: 50%; }
+        .friend-item b { color: white; }
+
+        /* --- PLAYER BAR --- */
+        .player {
+            grid-area: player;
+            background-color: black;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .now-playing { display: flex; align-items: center; gap: 15px; width: 30%; }
+        .now-playing img { width: 56px; height: 56px; border-radius: 4px; }
+        .now-playing h4 { font-size: 14px; }
+        .now-playing p { font-size: 11px; color: var(--sp-grey); }
+
+        .player-controls { width: 40%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .btns { display: flex; align-items: center; gap: 25px; font-size: 18px; color: var(--sp-grey); }
+        .play-pause { font-size: 35px; color: white; cursor: pointer; }
+
+        .progress-bar-container { display: flex; align-items: center; gap: 10px; width: 100%; font-size: 11px; color: var(--sp-grey); }
+        .progress-bg { flex: 1; height: 4px; background: #4f4f4f; border-radius: 2px; position: relative; cursor: pointer; }
+        .progress-fill { width: 30%; height: 100%; background: white; border-radius: 2px; transition: 0.1s; }
+        .progress-bg:hover .progress-fill { background: var(--sp-green); }
+
+        .volume-controls { width: 30%; display: flex; justify-content: flex-end; align-items: center; gap: 12px; color: var(--sp-grey); }
+
+        @media (max-width: 1000px) { .activity { display: none; } body { grid-template-columns: 280px 1fr; } }
+        @media (max-width: 768px) { .sidebar { display: none; } body { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div class="sidebar">
-            <i class="fab fa-spotify" style="font-size: 40px;"></i>
-            <a href="#" class="nav-item active" id="homeLink"><i class="fas fa-home"></i> Home</a>
-            <a href="#" class="nav-item" id="searchLink"><i class="fas fa-search"></i> Search</a>
-            <a href="#" class="nav-item" id="libraryLink"><i class="fas fa-book"></i> Your Library</a>
-            <div style="margin-top: 20px; font-size: 12px; color: var(--spotify-grey);">PLAYLISTS</div>
-            <a href="#" class="nav-item" style="font-size: 14px;">Our Love Story ♡</a>
+    <div class="sidebar">
+        <div class="side-card">
+            <a href="#" class="nav-item active"><i class="fas fa-home"></i> Home</a>
+            <a href="#" class="nav-item"><i class="fas fa-search"></i> Search</a>
         </div>
-
-        <div class="content">
-            <div id="homeContent" class="tab-content">
-                <div class="header">
-                    <img src="https://tse1.mm.bing.net/th/id/OIP.oxb28ORK3T1Rl4FkKdNBOgHaEK?pid=Api&P=0&h=180" class="album-art" alt="Lover Taylor Swift">
-                    <div class="header-text">
-                        <p style="font-size: 12px; font-weight: bold;">PUBLIC PLAYLIST</p>
-                        <h1>Couple Era</h1>
-                        <p>Made for <b>Us</b> • <span id="numSongs">3</span> Songs, <span id="totalDuration">10 min 24 sec</span></p>
-                    </div>
-                </div>
-
-                <div class="playlist-container">
-                    <div class="controls">
-                        <div class="play-btn-large" onclick="togglePlay()"><i class="fas fa-play" id="mainPlayIcon"></i></div>
-                        <i class="far fa-heart" style="font-size: 32px; color: var(--spotify-grey);"></i>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Title</th>
-                                <th class="duration-col"><i class="far fa-clock"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="tracklist">
-                            </tbody>
-                    </table>
+        <div class="side-card library">
+            <div class="lib-header">
+                <span><i class="fas fa-book" style="margin-right: 10px;"></i> Your Library</span>
+                <i class="fas fa-plus"></i>
+            </div>
+            <div class="playlist-item">
+                <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" alt="Lover">
+                <div>
+                    <p>Our Love Era</p>
+                    <span>Playlist • You</span>
                 </div>
             </div>
-
-            <div id="libraryContent" class="tab-content library-content">
-                <h2>Our Shared Memories</h2>
-                <div class="photo-grid">
-                    <div class="photo-item">
-                        <img src="https://picsum.photos/id/1018/300/300" alt="Dummy Photo 1">
-                        <div class="photo-item-caption">Beautiful Sunset</div>
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://picsum.photos/id/1015/300/300" alt="Dummy Photo 2">
-                        <div class="photo-item-caption">Mountain Adventure</div>
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://picsum.photos/id/1025/300/300" alt="Dummy Photo 3">
-                        <div class="photo-item-caption">City Lights</div>
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://picsum.photos/id/1020/300/300" alt="Dummy Photo 4">
-                        <div class="photo-item-caption">Cozy Cafe Date</div>
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://picsum.photos/id/1040/300/300" alt="Dummy Photo 5">
-                        <div class="photo-item-caption">Beach Day Fun</div>
-                    </div>
-                    <div class="photo-item">
-                        <img src="https://picsum.photos/id/1043/300/300" alt="Dummy Photo 6">
-                        <div class="photo-item-caption">Park Stroll</div>
-                    </div>
+            <div class="playlist-item">
+                <img src="https://picsum.photos/id/102/100/100" alt="Random">
+                <div>
+                    <p>Late Night Chats</p>
+                    <span>Playlist • You</span>
                 </div>
             </div>
-
-            <div id="searchContent" class="tab-content" style="padding: 40px 32px; display: none;">
-                <h2>Search</h2>
-                <p>Fitur pencarian akan datang!</p>
-            </div>
-
         </div>
     </div>
 
-    <div class="player-bar">
-        <div class="current-track">
-            <img id="current-art" src="" alt="Art">
-            <div>
-                <div class="song-title" id="current-title" style="font-size: 14px;"></div>
-                <div style="font-size: 11px; color: var(--spotify-grey);" id="current-artist"></div>
+    <div class="main">
+        <div class="main-header">
+            <img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" class="album-img" alt="Lover Cover">
+            <div class="album-info">
+                <p>Public Playlist</p>
+                <h1>Couple Era</h1>
+                <p><b>You</b> • 3 songs, about 12 min</p>
             </div>
+        </div>
+
+        <div class="list-container">
+            <div class="controls-main">
+                <div class="play-big" id="mainPlayBtn" onclick="togglePlay()"><i class="fas fa-play"></i></div>
+                <i class="far fa-heart" style="font-size: 32px; color: var(--sp-grey);"></i>
+                <i class="fas fa-ellipsis-h" style="font-size: 24px; color: var(--sp-grey);"></i>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Album</th>
+                        <th><i class="far fa-clock"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="playSong(0)">
+                        <td>1</td>
+                        <td class="active-song">Lover</td>
+                        <td>Lover</td>
+                        <td>3:41</td>
+                    </tr>
+                    <tr onclick="playSong(1)">
+                        <td>2</td>
+                        <td>Love Story (TV)</td>
+                        <td>Fearless</td>
+                        <td>3:55</td>
+                    </tr>
+                    <tr onclick="playSong(2)">
+                        <td>3</td>
+                        <td>Enchanted</td>
+                        <td>Speak Now</td>
+                        <td>5:52</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="activity">
+        <h4 style="font-size: 14px;">Friend Activity</h4>
+        <div class="friend-item">
+            <img src="https://picsum.photos/id/64/50/50" alt="Avatar">
+            <div>
+                <p><b>Pacar Kamu</b></p>
+                <p>Lover - Taylor Swift</p>
+                <span><i class="fas fa-record-vinyl"></i> Our Memories</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="player">
+        <div class="now-playing">
+            <img id="track-art" src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" alt="Art">
+            <div>
+                <h4 id="track-title">Lover</h4>
+                <p id="track-artist">Taylor Swift</p>
+            </div>
+            <i class="far fa-heart" style="margin-left: 10px; font-size: 14px;"></i>
         </div>
 
         <div class="player-controls">
-            <div class="control-buttons">
-                <i class="fas fa-random" style="color: var(--spotify-grey); font-size: 14px;"></i>
-                <i class="fas fa-step-backward" onclick="prevSong()"></i>
-                <i class="fas fa-play-circle play-pause" id="playBtn" onclick="togglePlay()"></i>
-                <i class="fas fa-step-forward" onclick="nextSong()"></i>
-                <i class="fas fa-redo" style="color: var(--spotify-grey); font-size: 14px;"></i>
+            <div class="btns">
+                <i class="fas fa-random"></i>
+                <i class="fas fa-step-backward"></i>
+                <i class="fas fa-play-circle play-pause" id="masterPlay" onclick="togglePlay()"></i>
+                <i class="fas fa-step-forward"></i>
+                <i class="fas fa-redo"></i>
             </div>
-            <div class="progress-container">
-                <span id="currentTime">0:00</span>
-                <div class="progress-bar" onclick="seek(event)">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <span id="totalTime">0:00</span>
+            <div class="progress-bar-container">
+                <span id="currTime">0:00</span>
+                <div class="progress-bg"><div class="progress-fill" id="progBar"></div></div>
+                <span id="totalTime">3:41</span>
             </div>
         </div>
 
-        <div style="width: 30%; display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
-            <i class="fas fa-volume-up" style="color: var(--spotify-grey);"></i>
-            <div class="progress-bar" style="width: 100px;"><div class="progress-fill" style="width: 70%;"></div></div>
+        <div class="volume-controls">
+            <i class="fas fa-microphone"></i>
+            <i class="fas fa-list"></i>
+            <i class="fas fa-volume-up"></i>
+            <div class="progress-bg" style="width: 100px;"><div class="progress-fill" style="width: 70%;"></div></div>
         </div>
     </div>
 
-    <audio id="audioPlayer" src=""></audio>
+    <audio id="audioPlayer" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
     <script>
-        const songs = [
-            {
-                title: "Love Story (Taylor's Version)",
-                artist: "Taylor Swift",
-                cover: "https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411",
-                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", // Demo MP3
-                duration: "3:55"
-            },
-            {
-                title: "Lover",
-                artist: "Taylor Swift",
-                cover: "https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a11f91d349",
-                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", // Demo MP3
-                duration: "3:41"
-            },
-            {
-                title: "Enchanted",
-                artist: "Taylor Swift",
-                cover: "https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932",
-                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", // Demo MP3
-                duration: "5:52"
-            }
-        ];
-
-        let currentSongIndex = 0;
         const audio = document.getElementById('audioPlayer');
-        const playBtn = document.getElementById('playBtn');
-        const mainPlayIcon = document.getElementById('mainPlayIcon');
-        const progressFill = document.getElementById('progressFill');
-        const currentTimeEl = document.getElementById('currentTime');
-        const totalTimeEl = document.getElementById('totalTime');
-        const tracklistBody = document.getElementById('tracklist');
-
-        const homeLink = document.getElementById('homeLink');
-        const libraryLink = document.getElementById('libraryLink');
-        const searchLink = document.getElementById('searchLink');
-
-        const homeContent = document.getElementById('homeContent');
-        const libraryContent = document.getElementById('libraryContent');
-        const searchContent = document.getElementById('searchContent');
-
-
-        // Function to calculate total duration of playlist
-        function calculateTotalDuration() {
-            let totalSeconds = 0;
-            songs.forEach(song => {
-                const [minutes, seconds] = song.duration.split(':').map(Number);
-                totalSeconds += (minutes * 60) + seconds;
-            });
-
-            const totalMins = Math.floor(totalSeconds / 60);
-            const remainingSecs = totalSeconds % 60;
-            return `${totalMins} min ${remainingSecs < 10 ? '0' : ''}${remainingSecs} sec`;
-        }
-
-
-        // Populate tracklist
-        function populateTracklist() {
-            tracklistBody.innerHTML = '';
-            songs.forEach((song, index) => {
-                const row = document.createElement('tr');
-                row.setAttribute('onclick', `playSong(${index})`);
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>
-                        <div class="song-info">
-                            <img src="${song.cover}" width="40" height="40">
-                            <div>
-                                <span class="song-title">${song.title}</span>
-                                <span>${song.artist}</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="duration-col">${song.duration}</td>
-                `;
-                tracklistBody.appendChild(row);
-            });
-            document.getElementById('numSongs').innerText = songs.length;
-            document.getElementById('totalDuration').innerText = calculateTotalDuration();
-        }
-
-        function loadSong(index) {
-            const song = songs[index];
-            document.getElementById('current-title').innerText = song.title;
-            document.getElementById('current-artist').innerText = song.artist;
-            document.getElementById('current-art').src = song.cover;
-            audio.src = song.url;
-        }
+        const playBtn = document.getElementById('masterPlay');
+        const progBar = document.getElementById('progBar');
+        let isPlaying = false;
 
         function togglePlay() {
             if (audio.paused) {
                 audio.play();
                 playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
-                mainPlayIcon.classList.replace('fa-play', 'fa-pause');
+                isPlaying = true;
             } else {
                 audio.pause();
                 playBtn.classList.replace('fa-pause-circle', 'fa-play-circle');
-                mainPlayIcon.classList.replace('fa-pause', 'fa-play');
-            }
-        }
-
-        function playSong(index) {
-            if (index !== currentSongIndex) { // Only load if different song is clicked
-                currentSongIndex = index;
-                loadSong(index);
-                audio.play();
-                playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
-                mainPlayIcon.classList.replace('fa-play', 'fa-pause');
-            } else if (audio.paused) { // If same song clicked and paused, just play
-                togglePlay();
+                isPlaying = false;
             }
         }
 
         audio.ontimeupdate = () => {
-            if (audio.duration) {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = `${progress}%`;
-                
-                let curMins = Math.floor(audio.currentTime / 60);
-                let curSecs = Math.floor(audio.currentTime % 60);
-                if (curSecs < 10) curSecs = "0" + curSecs;
-                currentTimeEl.innerText = `${curMins}:${curSecs}`;
-
-                let durMins = Math.floor(audio.duration / 60);
-                let durSecs = Math.floor(audio.duration % 60);
-                if (durSecs < 10) durSecs = "0" + durSecs;
-                totalTimeEl.innerText = `${durMins}:${durSecs}`;
-            } else {
-                currentTimeEl.innerText = "0:00";
-                totalTimeEl.innerText = "0:00";
-            }
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progBar.style.width = percent + "%";
+            
+            let m = Math.floor(audio.currentTime / 60);
+            let s = Math.floor(audio.currentTime % 60);
+            document.getElementById('currTime').innerText = m + ":" + (s < 10 ? '0'+s : s);
         };
 
-        audio.onended = () => {
-            nextSong(); // Play next song when current one ends
-        };
-
-
-        function nextSong() {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
-            playSong(currentSongIndex);
+        function playSong(id) {
+            // Dummy logic: change title and play
+            const titles = ["Lover", "Love Story (TV)", "Enchanted"];
+            const covers = [
+                "https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349",
+                "https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411",
+                "https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932"
+            ];
+            document.getElementById('track-title').innerText = titles[id];
+            document.getElementById('track-art').src = covers[id];
+            audio.currentTime = 0;
+            audio.play();
+            playBtn.classList.replace('fa-play-circle', 'fa-pause-circle');
         }
-
-        function prevSong() {
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-            playSong(currentSongIndex);
-        }
-
-        function seek(e) {
-            const width = e.target.clientWidth;
-            const clickX = e.offsetX;
-            const duration = audio.duration;
-            audio.currentTime = (clickX / width) * duration;
-        }
-
-        // Tab switching logic
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.style.display = 'none';
-            });
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            document.getElementById(tabId).style.display = 'block';
-            document.getElementById(`${tabId.replace('Content', 'Link')}`).classList.add('active');
-        }
-
-        homeLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showTab('homeContent');
-        });
-
-        libraryLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showTab('libraryContent');
-        });
-        
-        searchLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showTab('searchContent');
-        });
-
-
-        // Initialize
-        populateTracklist();
-        loadSong(currentSongIndex);
-        showTab('homeContent'); // Show home content by default
     </script>
 </body>
 </html>
