@@ -3,224 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netflix - Our Love Story</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Netflix Indonesia - Watch Love Stories</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <style>
         :root {
-            --netflix-red: #E50914;
-            --netflix-black: #141414;
-            --netflix-grey: #808080;
+            --nf-red: #E50914;
+            --nf-black: #141414;
+            --nf-white: #E5E5E5;
+            --nf-dark-grey: #181818;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--netflix-black);
+            background-color: var(--nf-black);
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             overflow-x: hidden;
         }
 
-        /* --- INTRO ANIMATION --- */
-        #intro {
+        /* --- PROFILE SELECTOR (WHO'S WATCHING) --- */
+        #profile-screen {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: black;
+            inset: 0;
+            background-color: #141414;
+            z-index: 10000;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            animation: fadeOut 1s ease 3.5s forwards;
+            transition: opacity 0.6s ease;
         }
 
-        .netflix-logo-n {
-            color: var(--netflix-red);
-            font-size: 120px;
-            font-weight: bold;
-            font-family: 'Arial Black';
-            transform: scale(0.5);
-            animation: zoomIn 2.5s ease-in-out forwards;
+        #profile-screen h1 {
+            font-size: 3.5vw;
+            font-weight: 500;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
         }
 
-        @keyframes zoomIn {
-            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
-            50% { opacity: 1; filter: blur(0px); }
-            100% { transform: scale(1.2); }
+        .profile-list {
+            display: flex;
+            gap: 2vw;
+            list-style: none;
         }
 
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: grey;
         }
 
-        /* --- NAVBAR --- */
+        .profile-card:hover .avatar { border: 3px solid white; }
+        .profile-card:hover { color: white; }
+
+        .avatar {
+            width: 10vw;
+            height: 10vw;
+            min-width: 100px;
+            min-height: 100px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-size: cover;
+            border: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .manage-profile-btn {
+            margin-top: 4vw;
+            padding: 10px 25px;
+            border: 1px solid grey;
+            color: grey;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        /* --- NETFLIX NAVBAR --- */
         .navbar {
             position: fixed;
-            top: 0; width: 100%; padding: 20px 50px;
-            display: flex; align-items: center; justify-content: space-between;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 10%, transparent);
+            top: 0; width: 100%; height: 68px;
+            display: flex; align-items: center; padding: 0 4%;
+            background: linear-gradient(to bottom, rgba(0,0,0,.7) 10%, transparent);
             z-index: 1000;
-            transition: background 0.5s;
+            transition: background 0.4s;
         }
 
-        .navbar.scrolled { background-color: var(--netflix-black); }
+        .navbar.black { background-color: #141414; }
 
-        .logo {
-            color: var(--netflix-red);
+        .nav-logo {
+            color: var(--nf-red);
             font-size: 30px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: -1px;
+            font-family: 'Arial Black', sans-serif;
+            margin-right: 25px;
+            font-weight: 900;
         }
 
-        .nav-links { display: flex; gap: 20px; list-style: none; font-size: 14px; }
-        .nav-links li { cursor: pointer; transition: 0.3s; }
-        .nav-links li:hover { color: var(--netflix-grey); }
+        .nav-links { display: flex; gap: 20px; font-size: 14px; list-style: none; }
+        .nav-links li { cursor: pointer; color: #e5e5e5; transition: 0.3s; }
+        .nav-links li:hover { color: #b3b3b3; }
 
-        /* --- HERO SECTION --- */
-        .hero {
-            height: 90vh;
-            background: linear-gradient(to right, rgba(0,0,0,0.8), transparent), 
-                        url('https://wallpaperaccess.com/full/1923020.jpg'); /* Ganti Foto Utama Disini */
+        /* --- BILLBOARD (HERO) --- */
+        .billboard {
+            position: relative;
+            height: 85vh;
+            width: 100%;
+            background: linear-gradient(to top, var(--nf-black) 5%, transparent 20%),
+                        linear-gradient(to right, rgba(0,0,0,0.6) 30%, transparent 70%),
+                        url('https://i.ibb.co/Xz9ZkR8/hero-bg.jpg'); /* GANTI FOTO COUPLE DI SINI */
             background-size: cover;
             background-position: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 0 50px;
+            padding-left: 4%;
         }
 
-        .hero-title { font-size: 60px; margin-bottom: 20px; }
-        .hero-desc { max-width: 600px; font-size: 18px; margin-bottom: 30px; line-height: 1.4; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .billboard-title { font-size: 4vw; width: 40%; margin-bottom: 20px; }
+        .billboard-meta { font-size: 1.2vw; font-weight: bold; margin-bottom: 15px; }
+        .billboard-meta span { color: #46d369; } /* Match Rating */
 
-        .btn-group { display: flex; gap: 15px; }
-        .btn {
-            padding: 12px 25px; border-radius: 4px; border: none;
-            font-size: 18px; font-weight: bold; cursor: pointer;
+        .btn-group { display: flex; gap: 1rem; }
+        .nf-btn {
             display: flex; align-items: center; gap: 10px;
+            padding: 12px 28px; border-radius: 4px; border: none;
+            font-size: 1.2vw; font-weight: bold; cursor: pointer;
+            transition: 0.2s;
         }
         .btn-play { background-color: white; color: black; }
         .btn-play:hover { background-color: rgba(255,255,255,0.7); }
         .btn-info { background-color: rgba(109, 109, 110, 0.7); color: white; }
+        .btn-info:hover { background-color: rgba(109, 109, 110, 0.4); }
 
-        /* --- SLIDER ROWS --- */
-        .row { padding: 20px 50px; }
-        .row-title { font-size: 20px; font-weight: bold; margin-bottom: 15px; }
-        .row-posters {
-            display: flex; overflow-y: hidden; overflow-x: scroll;
-            padding: 20px 0; scroll-behavior: smooth;
+        /* --- ROW SLIDER --- */
+        .row { margin: 3vw 0 3vw 4%; }
+        .row-header { font-size: 1.4vw; font-weight: bold; margin-bottom: 10px; color: #e5e5e5; }
+        .row-container {
+            display: flex;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            padding: 20px 0;
+            gap: 10px;
         }
-        .row-posters::-webkit-scrollbar { display: none; }
+        .row-container::-webkit-scrollbar { display: none; }
 
-        .poster {
-            width: 200px; object-fit: contain; margin-right: 15px;
-            transition: transform 450ms; cursor: pointer;
+        .item {
+            position: relative;
+            min-width: 250px;
+            height: 140px;
+            background-color: var(--nf-dark-grey);
             border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-        .poster:hover { transform: scale(1.08); }
 
-        /* --- AUDIO PLAYER (HIDDEN) --- */
-        audio { display: none; }
+        .item img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+        
+        /* Pop-out Effect */
+        .item:hover {
+            transform: scale(1.4);
+            z-index: 10;
+        }
 
-        /* --- MOBILE RESPONSIVE --- */
+        /* --- FOOTER --- */
+        footer { padding: 50px 0; text-align: center; color: grey; font-size: 14px; }
+
         @media (max-width: 768px) {
-            .navbar { padding: 15px 20px; }
-            .hero { padding: 0 20px; }
-            .hero-title { font-size: 35px; }
-            .nav-links { display: none; }
-            .poster { width: 150px; }
+            .nav-links, .manage-profile-btn { display: none; }
+            .billboard-title { font-size: 30px; width: 80%; }
+            .nf-btn { font-size: 14px; padding: 8px 15px; }
+            .item { min-width: 160px; height: 90px; }
+            #profile-screen h1 { font-size: 24px; }
         }
     </style>
 </head>
 <body>
 
-    <div id="intro">
-        <div class="netflix-logo-n">N</div>
+    <div id="profile-screen">
+        <h1>Who's watching?</h1>
+        <div class="profile-list">
+            <div class="profile-card" onclick="enterApp('Cowok')">
+                <div class="avatar" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png');"></div>
+                <span>Sayangku</span>
+            </div>
+            <div class="profile-card" onclick="enterApp('Cewek')">
+                <div class="avatar" style="background-image: url('https://i.pinimg.com/originals/fb/8e/8a/fb8e8a96fca2f049334f312086a6e2f6.png');"></div>
+                <span>Cintaku</span>
+            </div>
+        </div>
+        <div class="manage-profile-btn">Manage Profiles</div>
     </div>
 
-    <audio id="audioTadum" src="https://www.myinstants.com/media/sounds/netflix-intro-sound.mp3"></audio>
-    <audio id="loveSong" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
-
     <nav class="navbar" id="nav">
-        <div class="logo">COUPLEFLIX</div>
+        <div class="nav-logo">NETFLIX</div>
         <ul class="nav-links">
-            <li>Home</li>
-            <li>Memories</li>
+            <li style="font-weight:bold; color:white;">Home</li>
+            <li>TV Shows</li>
+            <li>Movies</li>
             <li>New & Popular</li>
             <li>My List</li>
         </ul>
     </nav>
 
-    <header class="hero">
-        <h1 class="hero-title">Our Love Era</h1>
-        <p class="hero-desc">Kisah perjalanan kita yang lebih indah dari drama Korea manapun. Menampilkan Taylor Swift sebagai soundtrack utama hidup kita.</p>
+    <header class="billboard">
+        <div class="billboard-meta"><span>98% Match</span> 2024 13+ 1 Season</div>
+        <h1 class="billboard-title">Kisah Kita: The Love Eras</h1>
         <div class="btn-group">
-            <button class="btn btn-play" onclick="playMusic()">
-                <i class="fas fa-play"></i> Play
-            </button>
-            <button class="btn btn-info" onclick="alert('I Love You More Than Anything!')">
-                <i class="fas fa-info-circle"></i> More Info
-            </button>
+            <button class="nf-btn btn-play" onclick="togglePlay()"><i class="fas fa-play"></i> Play</button>
+            <button class="nf-btn btn-info"><i class="fas fa-circle-info"></i> More Info</button>
         </div>
     </header>
 
     <div class="row">
-        <h2 class="row-title">Continue Watching for Us</h2>
-        <div class="row-posters">
-            <img class="poster" src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349" alt="Lover Era">
-            <img class="poster" src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411" alt="Love Story TV">
-            <img class="poster" src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932" alt="Enchanted">
-            <img class="poster" src="https://picsum.photos/id/1011/200/300" alt="Date 1">
-            <img class="poster" src="https://picsum.photos/id/1012/200/300" alt="Date 2">
-            <img class="poster" src="https://picsum.photos/id/1013/200/300" alt="Date 3">
-            <img class="poster" src="https://picsum.photos/id/1014/200/300" alt="Date 4">
+        <h2 class="row-header">Trending Now</h2>
+        <div class="row-container">
+            <div class="item"><img src="https://i.scdn.co/image/ab67616d0000b273e787cffec20aa2a11f91d349"></div>
+            <div class="item"><img src="https://i.scdn.co/image/ab67616d00001e02bb54dde382b6972d8800c411"></div>
+            <div class="item"><img src="https://i.scdn.co/image/ab67616d00001e0250ad57a428640d978c290932"></div>
+            <div class="item"><img src="https://picsum.photos/id/1015/300/200"></div>
+            <div class="item"><img src="https://picsum.photos/id/1016/300/200"></div>
+            <div class="item"><img src="https://picsum.photos/id/1019/300/200"></div>
         </div>
     </div>
 
     <div class="row">
-        <h2 class="row-title">Our Favorite Eras</h2>
-        <div class="row-posters">
-            <img class="poster" src="https://picsum.photos/id/102/200/300" alt="Era 1">
-            <img class="poster" src="https://picsum.photos/id/103/200/300" alt="Era 2">
-            <img class="poster" src="https://picsum.photos/id/104/200/300" alt="Era 3">
-            <img class="poster" src="https://picsum.photos/id/106/200/300" alt="Era 4">
-            <img class="poster" src="https://picsum.photos/id/107/200/300" alt="Era 5">
+        <h2 class="row-header">Continue Watching for You</h2>
+        <div class="row-container">
+            <div class="item"><img src="https://picsum.photos/id/1035/300/200"></div>
+            <div class="item"><img src="https://picsum.photos/id/1039/300/200"></div>
+            <div class="item"><img src="https://picsum.photos/id/1043/300/200"></div>
+            <div class="item"><img src="https://picsum.photos/id/1050/300/200"></div>
         </div>
     </div>
 
+    <footer>
+        &copy; 1997-2024 Netflix, Inc. - Khusus Buat Kamu ❤️
+    </footer>
+
+    <audio id="tadum" src="https://www.myinstants.com/media/sounds/netflix-intro-sound.mp3"></audio>
+    <audio id="song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
     <script>
-        // Efek Navbar saat Scroll
         const nav = document.getElementById('nav');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        });
+        const song = document.getElementById('song');
+        const tadum = document.getElementById('tadum');
 
-        // Intro Sound "Ta-dum"
-        window.addEventListener('DOMContentLoaded', () => {
-            const tadum = document.getElementById('audioTadum');
-            tadum.volume = 0.5;
-            // Catatan: Autoplay audio sering diblokir browser, 
-            // butuh klik user atau interaksi pertama.
-            tadum.play().catch(e => console.log("Audio waiting for interaction"));
-        });
+        // Nav Scroll Effect
+        window.onscroll = () => {
+            if (window.scrollY > 50) nav.classList.add('black');
+            else nav.classList.remove('black');
+        };
 
-        // Music Control
-        let isPlaying = false;
-        const music = document.getElementById('loveSong');
+        // Profile Selector Logic
+        function enterApp(user) {
+            tadum.play();
+            const screen = document.getElementById('profile-screen');
+            screen.style.opacity = '0';
+            setTimeout(() => {
+                screen.style.display = 'none';
+                alert("Selamat datang, " + user + "!");
+            }, 600);
+        }
 
-        function playMusic() {
-            if (!isPlaying) {
-                music.play();
+        // Music Toggle
+        let playing = false;
+        function togglePlay() {
+            if(!playing) {
+                song.play();
                 document.querySelector('.btn-play').innerHTML = '<i class="fas fa-pause"></i> Pause';
-                isPlaying = true;
             } else {
-                music.pause();
+                song.pause();
                 document.querySelector('.btn-play').innerHTML = '<i class="fas fa-play"></i> Play';
-                isPlaying = false;
             }
+            playing = !playing;
         }
     </script>
 </body>
